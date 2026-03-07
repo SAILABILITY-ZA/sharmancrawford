@@ -465,12 +465,6 @@
   }
 
   .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .reveal.visible {
     opacity: 1;
     transform: translateY(0);
   }
@@ -516,6 +510,7 @@
   <ul class="nav-links">
     <li><a href="#philosophy">Philosophy</a></li>
     <li><a href="#meetings">Meetings</a></li>
+    <li><a href="#heritage">Heritage</a></li>
     <li><a href="#charity">Charity</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -604,6 +599,39 @@
   <div class="divider-line"></div>
 </div>
 
+<!-- HERITAGE -->
+<section id="heritage">
+  <div class="section-label reveal">Our Heritage</div>
+  <div class="section-heading reveal">A temple that chose the right side of history</div>
+  <div class="section-body reveal">
+    <p>Lodge de Goede Hoop, Bouquet Street, Cape Town — consecrated in 1803 and today a national monument. One of the most beautiful Masonic temples in the world — and during the darkest years of Apartheid, the only place in South Africa where men of all races were permitted to meet as equals. History is embedded in every wall.</p>
+  </div>
+
+  <div class="meeting-card reveal" style="border-color: rgba(42, 122, 74, 0.3);">
+    <div class="hero-quote" style="max-width:100%; font-size:1.15rem;">
+      "During Apartheid in South Africa, there was only one organisation permitted to fraternise across the colour line — and that organisation was Freemasonry."
+      <cite style="display:block; margin-top:0.8rem; font-size:0.8rem; font-style:normal; letter-spacing:0.1em; color:var(--gold-dim);">— Lodge de Goede Hoop, Cape Town</cite>
+    </div>
+  </div>
+
+  <div class="section-body reveal" style="margin-top: 2.5rem;">
+    <p>At a time when an entire nation was organised around the separation of people by race, the Lodge de Goede Hoop — the very temple where we meet today — was the only place in South Africa where men of all racial backgrounds could sit together as equals. This was not a quiet accommodation. It was a deliberate, principled stand.</p>
+    <p>The Grand Lodge of South Africa, led by the courage of men like R.W. Brother Morris Levin, formally negotiated the right to admit men of colour as full members, with some rising to the highest offices within the Grand Lodge — at a time when such equality was illegal almost everywhere else in the country.</p>
+    <p>When we walk through the doors of Lodge de Goede Hoop today, we walk into a building that chose the right side of history, quietly, before it was popular or safe to do so. That is a legacy worth knowing. And worth continuing.</p>
+  </div>
+
+  <div class="section-body reveal" style="margin-top: 2.5rem;">
+    <p><em>Sharman Crawford Lodge No. 608 operates under the Provincial Grand Lodge of Southern Cape, within the oldest and most democratic of the great Masonic constitutions — the Grand Lodge of Ireland. The Irish Constitution is known for its warmth, its inclusivity, and its enduring commitment to the universality of Masonic brotherhood.</em></p>
+    <p><em>We are named for William Sharman Crawford — Irish reformer, champion of tenant rights, and a man of principle ahead of his time. His values of fairness, dignity, and courage for the right course shape our lodge culture to this day.</em></p>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-dot"></div>
+  <div class="divider-line"></div>
+</div>
+
 <!-- CHARITY -->
 <section id="charity">
   <div class="section-label reveal">Our Charity Work</div>
@@ -639,7 +667,7 @@
   <div class="contact-grid reveal">
     <div class="contact-item">
       <div class="contact-item-label">Email</div>
-      <div class="contact-item-value"><a href="mailto:p.jacops@gmail.com">p.jacops@gmail.com</a></div>
+      <div class="contact-item-value"><a href="/cdn-cgi/l/email-protection#a2d28cc8c3c1cdd2d1e2c5cfc3cbce8cc1cdcf"><span class="__cf_email__" data-cfemail="65154b0f04060a1516250208040c094b060a08">[email&#160;protected]</span></a></div>
     </div>
     <div class="contact-item">
       <div class="contact-item-label">Constitution</div>
@@ -659,18 +687,8 @@
 </footer>
 
 <!-- SCROLL REVEAL -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   const revealEls = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 80);
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  revealEls.forEach(el => observer.observe(el));
-</script>
-
-</body>
-</html>
+      if (e.isI
