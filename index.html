@@ -575,7 +575,7 @@
   <div class="section-label reveal">When We Meet</div>
   <div class="section-heading reveal">Lodge de Goede Hoop, Cape Town</div>
   <div class="section-body reveal">
-    <p>We gather on the second Thursday of each month, except January. Our meetings are held at the historic Lodge de Goede Hoop — one of the most beautiful Masonic venues in the Southern Hemisphere — where the traditions of centuries meet the conversations of today.</p>
+    <p>We gather on the second Thursday of each month, except January. Our meetings are held at the historic masonic centre de Goede Hoop — one of the most beautiful Masonic venues in the Southern Hemisphere — where the traditions of centuries meet the conversations of today.</p>
   </div>
 
   <div class="meeting-card reveal">
@@ -604,7 +604,7 @@
   <div class="section-label reveal">Our Heritage</div>
   <div class="section-heading reveal">A lodge that chose the right side of history</div>
   <div class="section-body reveal">
-    <p>Lodge de Goede Hoop, Bouquet Street, Cape Town — consecrated in 1803 and today a national monument. One of the most beautiful Masonic lodges in the world — and during the darkest years of Apartheid, the only place in South Africa where men of all races were permitted to meet as equals. History is embedded in every wall.</p>
+    <p>Masonic Centre de Goede Hoop, Bouquet Street, Cape Town — consecrated in 1803 and today a national monument. One of the most beautiful Masonic centres in the world — and during the darkest years of Apartheid, the only place in South Africa where men of all races were permitted to meet as equals. History is embedded in every wall.</p>
   </div>
 
   <div class="meeting-card reveal" style="border-color: rgba(42, 122, 74, 0.3);">
@@ -615,9 +615,9 @@
   </div>
 
   <div class="section-body reveal" style="margin-top: 2.5rem;">
-    <p>At a time when an entire nation was organised around the separation of people by race, the Lodge de Goede Hoop — the very lodge where we meet today — was the only place in South Africa where men of all racial backgrounds could sit together as equals. This was not a quiet accommodation. It was a deliberate, principled stand.</p>
+    <p>At a time when an entire nation was organised around the separation of people by race, the Masonic Centre de Goede Hoop — the very Masonic Centre where we meet today — was the only place in South Africa where men of all racial backgrounds could sit together as equals. This was not a quiet accommodation. It was a deliberate, principled stand.</p>
     <p>The Grand Lodge of South Africa, led by the courage of men like R.W. Brother Morris Levin, formally negotiated the right to admit men of colour as full members, with some rising to the highest offices within the Grand Lodge — at a time when such equality was illegal almost everywhere else in the country.</p>
-    <p>When we walk through the doors of Lodge de Goede Hoop today, we walk into a building that chose the right side of history, quietly, before it was popular or safe to do so. That is a legacy worth knowing. And worth continuing.</p>
+    <p>When we walk through the doors of de Goede Hoop Masonic Centre today, we walk into a building that chose the right side of history, quietly, before it was popular or safe to do so. That is a legacy worth knowing. And worth continuing.</p>
   </div>
 
   <div class="section-body reveal" style="margin-top: 2.5rem;">
@@ -667,7 +667,7 @@
   <div class="contact-grid reveal">
     <div class="contact-item">
       <div class="contact-item-label">Email</div>
-      <div class="contact-item-value"><a href="/cdn-cgi/l/email-protection#a2d28cc8c3c1cdd2d1e2c5cfc3cbce8cc1cdcf"><span class="__cf_email__" data-cfemail="65154b0f04060a1516250208040c094b060a08">[email&#160;protected]</span></a></div>
+      <div class="contact-item-value"><a href="mailto:info@sharmancrawford.co.za">info@sharmancrawford.co.za</a></div>
     </div>
     <div class="contact-item">
       <div class="contact-item-label">Constitution</div>
@@ -687,8 +687,25 @@
 </footer>
 
 <!-- SCROLL REVEAL -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   const revealEls = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
-      if (e.isI
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }, i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
