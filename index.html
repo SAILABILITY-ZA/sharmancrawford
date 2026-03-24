@@ -31,7 +31,7 @@
     overflow-x: hidden;
   }
 
-  /* ---- GRAIN OVERLAY ---- */
+  /* GRAIN OVERLAY */
   body::after {
     content: '';
     position: fixed;
@@ -42,7 +42,7 @@
     z-index: 9999;
   }
 
-  /* ---- NAV ---- */
+  /* NAV — logo doubled to 120px, padding tightened to suit */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -50,7 +50,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 2.5rem;
+    padding: 0.6rem 2.5rem;
     background: rgba(10, 9, 5, 0.88);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(201, 168, 76, 0.15);
@@ -63,7 +63,7 @@
   }
 
   .nav-logo {
-    height: 60px;
+    height: 120px;
     width: auto;
   }
 
@@ -98,7 +98,19 @@
 
   .nav-links a:hover { color: var(--gold); }
 
-  /* ---- HERO ---- */
+  .nav-links a.members-link {
+    color: var(--gold-dim);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    padding: 0.3rem 0.8rem;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .nav-links a.members-link:hover {
+    color: var(--gold);
+    border-color: rgba(201, 168, 76, 0.5);
+  }
+
+  /* HERO — top padding increased to account for taller nav */
   .hero {
     min-height: 100vh;
     display: flex;
@@ -106,7 +118,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 8rem 2rem 4rem;
+    padding: 10rem 2rem 4rem;
     position: relative;
     overflow: hidden;
   }
@@ -176,7 +188,7 @@
     color: var(--gold-dim);
   }
 
-  /* ---- DIVIDER ---- */
+  /* DIVIDER */
   .divider {
     display: flex;
     align-items: center;
@@ -198,7 +210,7 @@
     transform: rotate(45deg);
   }
 
-  /* ---- SECTIONS ---- */
+  /* SECTIONS */
   section {
     padding: 5rem 2rem;
     max-width: 900px;
@@ -235,10 +247,9 @@
   }
 
   .section-body p + p { margin-top: 1.5rem; }
-
   .section-body em { color: var(--text); font-style: italic; }
 
-  /* ---- PHILOSOPHY ---- */
+  /* PHILOSOPHY */
   .philosophy-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -280,7 +291,7 @@
     color: var(--text-dim);
   }
 
-  /* ---- MEETING ---- */
+  /* MEETING */
   .meeting-card {
     background: var(--deep);
     border: 1px solid rgba(201, 168, 76, 0.12);
@@ -316,7 +327,7 @@
     opacity: 0.7;
   }
 
-  /* ---- CENTENARY ---- */
+  /* CENTENARY */
   .centenary-banner {
     background: linear-gradient(135deg, var(--irish-green) 0%, #0d2e1a 100%);
     border: 1px solid rgba(42, 122, 74, 0.3);
@@ -359,7 +370,7 @@
     margin-top: 1rem;
   }
 
-  /* ---- CHARITY ---- */
+  /* CHARITY */
   .charity-card {
     background: var(--deep);
     border: 1px solid rgba(201, 168, 76, 0.1);
@@ -371,15 +382,9 @@
     transition: border-color 0.4s;
   }
 
-  .charity-card:hover {
-    border-color: rgba(201, 168, 76, 0.25);
-  }
+  .charity-card:hover { border-color: rgba(201, 168, 76, 0.25); }
 
-  .charity-logo {
-    width: 120px;
-    height: auto;
-    flex-shrink: 0;
-  }
+  .charity-logo { width: 120px; height: auto; flex-shrink: 0; }
 
   .charity-info h3 {
     font-family: 'Cinzel', serif;
@@ -404,7 +409,7 @@
 
   .charity-info a:hover { border-bottom-color: var(--gold); }
 
-  /* ---- CONTACT ---- */
+  /* CONTACT */
   .contact-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -412,10 +417,7 @@
     margin-top: 2rem;
   }
 
-  .contact-item {
-    text-align: center;
-    padding: 1.5rem;
-  }
+  .contact-item { text-align: center; padding: 1.5rem; }
 
   .contact-item-label {
     font-family: 'Cinzel', serif;
@@ -425,17 +427,11 @@
     margin-bottom: 0.6rem;
   }
 
-  .contact-item-value {
-    font-size: 0.9rem;
-    color: var(--text);
-  }
+  .contact-item-value { font-size: 0.9rem; color: var(--text); }
 
-  .contact-item-value a {
-    color: var(--gold);
-    text-decoration: none;
-  }
+  .contact-item-value a { color: var(--gold); text-decoration: none; }
 
-  /* ---- FOOTER ---- */
+  /* FOOTER */
   footer {
     text-align: center;
     padding: 3rem 2rem;
@@ -452,36 +448,39 @@
     margin-bottom: 0.8rem;
   }
 
-  .footer-copy {
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    opacity: 0.5;
-  }
+  .footer-copy { font-size: 0.65rem; color: var(--text-dim); opacity: 0.5; }
 
-  /* ---- ANIMATIONS ---- */
+  /* ANIMATIONS */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .reveal {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .reveal { opacity: 1; transform: translateY(0); }
 
-  /* ---- RESPONSIVE ---- */
+  /* RESPONSIVE */
   @media (max-width: 768px) {
-    nav { padding: 0.8rem 1.2rem; }
+    nav { padding: 0.5rem 1.2rem; }
     .nav-links { display: none; }
-    .nav-logo { height: 44px; }
-    .hero { padding: 6rem 1.5rem 3rem; }
+    .nav-links.show {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      background: rgba(10,9,5,0.97);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      gap: 1.2rem;
+    }
+    .nav-logo { height: 80px; }
+    .hero { padding: 8rem 1.5rem 3rem; }
     .hero-emblem { width: 120px; }
     section { padding: 3rem 1.5rem; }
     .charity-card { flex-direction: column; text-align: center; }
     .meeting-card, .centenary-banner { padding: 2rem 1.5rem; }
   }
 
-  /* ---- HAMBURGER MOBILE ---- */
   .mobile-toggle {
     display: none;
     background: none;
@@ -491,9 +490,7 @@
     cursor: pointer;
   }
 
-  @media (max-width: 768px) {
-    .mobile-toggle { display: block; }
-  }
+  @media (max-width: 768px) { .mobile-toggle { display: block; } }
 </style>
 </head>
 <body>
@@ -507,14 +504,15 @@
       <div class="nav-sub">Lodge No. 608 · Irish Constitution</div>
     </div>
   </div>
-  <ul class="nav-links">
+  <ul class="nav-links" id="main-nav">
     <li><a href="#philosophy">Philosophy</a></li>
     <li><a href="#meetings">Meetings</a></li>
     <li><a href="#heritage">Heritage</a></li>
     <li><a href="#charity">Charity</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="members.html" class="members-link">Members</a></li>
   </ul>
-  <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">&#9776;</button>
+  <button class="mobile-toggle" onclick="document.getElementById('main-nav').classList.toggle('show')">&#9776;</button>
 </nav>
 
 <!-- HERO -->
@@ -585,7 +583,6 @@
     <div class="meeting-note">No meetings in January</div>
   </div>
 
-  <!-- CENTENARY -->
   <div class="centenary-banner reveal">
     <div class="centenary-year">1927 — 2027</div>
     <div class="centenary-text">Sharman Crawford Lodge was consecrated on 16 May 1927. In 2027 we mark our centenary — one hundred years of brotherhood, charity, and truth in Cape Town.</div>
@@ -689,19 +686,20 @@
 <!-- SCROLL REVEAL -->
 <script>
   const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
+  const observer  = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
       if (e.isIntersecting) {
         setTimeout(() => {
-          e.target.style.opacity = '1';
+          e.target.style.opacity   = '1';
           e.target.style.transform = 'translateY(0)';
         }, i * 80);
         observer.unobserve(e.target);
       }
     });
   }, { threshold: 0.1 });
+
   revealEls.forEach(el => {
-    el.style.opacity = '0';
+    el.style.opacity   = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
     observer.observe(el);
