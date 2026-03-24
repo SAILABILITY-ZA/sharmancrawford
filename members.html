@@ -831,6 +831,7 @@ const CARD_MAP = {
 let memberList    = [];
 let monthlyCode   = '';
 let currentMember = null;
+let loadedDocs    = [];
 
 (async function boot() {
   await loadDocuments();
@@ -893,6 +894,7 @@ async function loadDocuments() {
       console.warn('Could not load documents sheet:', err);
     }
   }
+  loadedDocs = docs;
   renderDocuments(docs);
 }
 
@@ -979,6 +981,7 @@ function showMembersArea() {
   document.getElementById('auth-screen').style.display = 'none';
   const area = document.getElementById('members-area');
   area.style.display = 'block';
+  renderDocuments(loadedDocs);
 
   const pretty = currentMember.name.replace(/\b\w/g, c => c.toUpperCase());
   document.getElementById('display-name').textContent = 'Bro. ' + pretty;
