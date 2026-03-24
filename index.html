@@ -461,6 +461,65 @@
   .reveal { opacity: 1; transform: translateY(0); }
 
   /* RESPONSIVE */
+  /* LIGHT BEAM — pure CSS, GPU only, zero canvas cost */
+  .beam-wrap {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .beam {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 55vh;
+    transform-origin: 50% 0%;
+    animation: sweep 8s ease-in-out infinite;
+    border-radius: 0 0 40px 40px;
+  }
+
+  .beam-1 {
+    background: linear-gradient(180deg, rgba(201,168,76,0.55) 0%, rgba(201,168,76,0.08) 60%, transparent 100%);
+    animation-delay: 0s;
+  }
+
+  .beam-2 {
+    background: linear-gradient(180deg, rgba(201,168,76,0.3) 0%, rgba(201,168,76,0.04) 60%, transparent 100%);
+    width: 2px;
+    animation-delay: -4s;
+    animation-duration: 10s;
+  }
+
+  .beam-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    animation: glow-pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes sweep {
+    0%   { transform: rotate(-35deg); opacity: 0.7; }
+    25%  { transform: rotate(0deg);   opacity: 1;   }
+    50%  { transform: rotate(35deg);  opacity: 0.7; }
+    75%  { transform: rotate(0deg);   opacity: 1;   }
+    100% { transform: rotate(-35deg); opacity: 0.7; }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1);    }
+    50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.15); }
+  }
+
   @media (max-width: 768px) {
     nav { padding: 0.5rem 1.2rem; }
     .nav-links { display: none; }
@@ -519,6 +578,11 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="beam-wrap">
+    <div class="beam-glow"></div>
+    <div class="beam beam-1"></div>
+    <div class="beam beam-2"></div>
+  </div>
   <img src="SC_Logo.png" alt="Lodge Emblem" class="hero-emblem">
   <h1>Sharman Crawford Lodge</h1>
   <div class="hero-lodge-num">No. 608</div>
