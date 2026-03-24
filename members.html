@@ -932,34 +932,52 @@ let currentMember = null;
   showAuth();
 })();
 
-// ─── API call ─────────────────────────────────────────────────────
-async function loadFromAPI() {
-  if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
-    console.warn('Apps Script URL not configured — using demo data.');
-    memberList  = [{ name: 'peter jacops', pin: '1234', ea: true, fc: true, mm: true }];
-    monthlyCode = 'SCL0425';
-    return;
-  }
+// ─── API call via JSONP (bypasses CORS restrictions on Apps Script) ─
+function loadFromAPI() {
+  return new Promise((resolve) => {
+    const cbName = 'sc608cb_' + Date.now();
 
-  try {
-    const url  = `${APPS_SCRIPT_URL}?key=${encodeURIComponent(API_SECRET_KEY)}&action=getAll`;
-    const res  = await fetch(url);
-    const data = await res.json();
+    const timer = setTimeout(() => {
+      cleanup();
+      console.error('API timeout.');
+      memberList  = [];
+      monthlyCode = '';
+      resolve();
+    }, 10000);
 
-    if (data.error) throw new Error(data.error);
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cbName];
+      const el = document.getElementById('jsonp-script');
+      if (el) el.remove();
+    }
 
-    memberList  = data.members     || [];
-    monthlyCode = data.monthlyCode || '';
+    window[cbName] = function(data) {
+      cleanup();
+      if (data.error) {
+        console.error('API error:', data.error);
+        memberList  = [];
+        monthlyCode = '';
+      } else {
+        memberList  = data.members     || [];
+        monthlyCode = data.monthlyCode || '';
+        populateDocuments(data.documents || []);
+      }
+      resolve();
+    };
 
-    // Pre-populate document lists from the Sheet
-    populateDocuments(data.documents || []);
-
-  } catch(err) {
-    console.error('API error:', err);
-    // Graceful fallback — page still works, documents just show empty
-    memberList  = [];
-    monthlyCode = '';
-  }
+    const script   = document.createElement('script');
+    script.id      = 'jsonp-script';
+    script.src     = APPS_SCRIPT_URL + '?key=' + encodeURIComponent(API_SECRET_KEY) + '&action=getAll&callback=' + cbName;
+    script.onerror = function() {
+      cleanup();
+      console.error('JSONP failed to load.');
+      memberList  = [];
+      monthlyCode = '';
+      resolve();
+    };
+    document.head.appendChild(script);
+  });
 }
 
 // ─── Document population ──────────────────────────────────────────
