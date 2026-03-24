@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; img-src 'self' data:;">
 <title>Members — Sharman Crawford Lodge No. 608</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -43,7 +42,6 @@
     z-index: 9999;
   }
 
-  /* NAV — logo doubled from 60px to 120px, nav height adjusted */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -87,13 +85,10 @@
     transition: color 0.3s;
   }
 
-  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a.active { color: var(--gold); }
 
-  .nav-member-panel {
-    display: none;
-    align-items: center;
-    gap: 1.2rem;
-  }
+  .nav-member-panel { display: none; align-items: center; gap: 1.2rem; }
 
   .nav-member-name {
     font-family: 'Cinzel', serif;
@@ -117,59 +112,10 @@
 
   .nav-logout:hover { border-color: var(--gold-dim); color: var(--gold); }
 
-  /* LOADING */
-  #loading-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-  }
-
-  .loading-emblem {
-    width: 80px;
-    opacity: 0.45;
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  .loading-text {
-    font-family: 'Cinzel', serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.3em;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-  }
-
-  .spinner {
-    display: flex;
-    gap: 6px;
-  }
-
-  .spinner span {
-    width: 5px; height: 5px;
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-    animation: blink 1.2s ease-in-out infinite;
-  }
-
-  .spinner span:nth-child(2) { animation-delay: 0.2s; }
-  .spinner span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes blink {
-    0%, 80%, 100% { opacity: 0.2; }
-    40% { opacity: 1; }
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.6; }
-  }
-
   /* AUTH */
   #auth-screen {
-    display: none;
     min-height: 100vh;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 11rem 2rem 4rem;
@@ -194,7 +140,6 @@
     animation: fadeUp 0.8s ease-out both;
   }
 
-  /* Auth emblem also doubled: 72px -> 144px */
   .auth-emblem {
     width: 144px;
     margin-bottom: 1.8rem;
@@ -240,18 +185,9 @@
   .step-node.active { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 14px rgba(201,168,76,0.15); }
   .step-node.done   { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--dark); }
 
-  .step-connector {
-    flex: 1;
-    height: 1px;
-    background: rgba(122,99,48,0.3);
-    max-width: 80px;
-  }
+  .step-connector { flex: 1; height: 1px; background: rgba(122,99,48,0.3); max-width: 80px; }
 
-  .step-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-  }
+  .step-labels { display: flex; justify-content: space-between; margin-bottom: 2rem; }
 
   .step-lbl {
     font-size: 0.57rem;
@@ -315,7 +251,6 @@
   }
 
   .auth-btn:hover { background: rgba(201,168,76,0.07); border-color: rgba(201,168,76,0.65); }
-  .auth-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
   .auth-error {
     background: rgba(140,30,30,0.12);
@@ -360,7 +295,7 @@
   }
 
   /* MEMBERS AREA */
-  #members-area { display: none; padding-top: 145px; min-height: 100vh; }
+  #members-area { display: none; padding-top: 150px; min-height: 100vh; }
 
   .members-header {
     text-align: center;
@@ -404,7 +339,6 @@
     text-transform: uppercase;
   }
 
-  /* NOTICE */
   .notice-wrap { max-width: 960px; margin: 2rem auto 0; padding: 0 2rem; }
 
   .notice-bar {
@@ -430,7 +364,6 @@
     margin-bottom: 0.2rem;
   }
 
-  /* TABS */
   .tab-bar {
     display: flex;
     justify-content: center;
@@ -491,7 +424,6 @@
   .deg-tab:not(.locked):not(.active):hover .deg-tab-code,
   .deg-tab:not(.locked):not(.active):hover .deg-tab-name { color: var(--text); }
 
-  /* PANELS */
   .deg-panel { display: none; max-width: 960px; margin: 0 auto; padding: 3rem 2rem 5rem; }
   .deg-panel.visible { display: block; animation: fadeUp 0.6s ease-out both; }
 
@@ -528,7 +460,6 @@
     line-height: 1.65;
   }
 
-  /* CONTENT GRID */
   .content-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
@@ -551,20 +482,13 @@
   .c-icon.fc { color: #c090e0; }
   .c-icon.mm { color: #70cc90; }
 
-  .c-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.13em;
-    margin-bottom: 0.65rem;
-  }
-
+  .c-title { font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.13em; margin-bottom: 0.65rem; }
   .c-title.ea { color: #7aaae0; }
   .c-title.fc { color: #c090e0; }
   .c-title.mm { color: #70cc90; }
 
   .c-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 0.8rem; }
 
-  /* DOCUMENT LIST — dynamically built from Google Sheet */
   .doc-list { list-style: none; }
 
   .doc-list li {
@@ -579,27 +503,14 @@
   }
 
   .doc-list li:last-child { border-bottom: none; }
-
-  .doc-list li a {
-    color: inherit;
-    text-decoration: none;
-    flex: 1;
-    transition: color 0.3s;
-  }
-
+  .doc-list li a { color: inherit; text-decoration: none; flex: 1; transition: color 0.3s; }
   .doc-list li:hover a { color: var(--text); }
   .doc-list li::before { content: '◆'; font-size: 0.32rem; flex-shrink: 0; }
   .doc-list.ea li::before { color: #3a5a8a; }
   .doc-list.fc li::before { color: #7a4a8a; }
   .doc-list.mm li::before { color: var(--irish-green-light); }
 
-  .doc-empty {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    font-style: italic;
-    opacity: 0.6;
-    padding: 0.4rem 0;
-  }
+  .doc-empty { font-size: 0.75rem; color: var(--text-dim); font-style: italic; opacity: 0.6; padding: 0.4rem 0; }
 
   footer {
     text-align: center;
@@ -625,7 +536,7 @@
   }
 
   @media (max-width: 768px) {
-    nav { padding: 0.5rem 1.2rem; }
+    nav { padding: 0.4rem 1.2rem; min-height: 100px; }
     .nav-links { display: none; }
     .nav-logo { height: 80px; }
     .auth-box { padding: 2.5rem 1.6rem; }
@@ -633,13 +544,12 @@
     .content-grid { grid-template-columns: 1fr; }
     .tab-bar { padding: 0 1rem; }
     .deg-panel { padding: 2rem 1.2rem 4rem; }
-    #members-area { padding-top: 100px; }
+    #members-area { padding-top: 115px; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-left">
     <img src="SC_Logo.png" alt="Sharman Crawford Lodge" class="nav-logo">
@@ -662,19 +572,8 @@
   </div>
 </nav>
 
-
-<!-- LOADING -->
-<div id="loading-screen">
-  <img src="SC_Logo.png" alt="" class="loading-emblem">
-  <div class="loading-text">Preparing the lodge</div>
-  <div class="spinner">
-    <span></span><span></span><span></span>
-  </div>
-</div>
-
-
-<!-- AUTH SCREEN -->
-<div id="auth-screen" style="display:none;">
+<!-- AUTH -->
+<div id="auth-screen">
   <div class="auth-box">
     <img src="SC_Logo.png" alt="Lodge Emblem" class="auth-emblem">
     <div class="auth-title">Members Area</div>
@@ -695,7 +594,6 @@
       <div class="step-lbl" id="sl3">Enter</div>
     </div>
 
-    <!-- Step 1: Name + PIN -->
     <div class="auth-step visible" id="step1">
       <div class="auth-error" id="err1">Brother not found, or PIN is incorrect. Please check your details and try again.</div>
       <div class="field-label">Your Name</div>
@@ -706,7 +604,6 @@
       <div class="auth-info">Your name and PIN were issued by the Webmaster. Contact the lodge Secretary if you have not received yours.</div>
     </div>
 
-    <!-- Step 2: Monthly WhatsApp code -->
     <div class="auth-step" id="step2">
       <div class="auth-error" id="err2">That code is incorrect. Please check the lodge WhatsApp group and try again.</div>
       <div class="field-label">Monthly Lodge Code</div>
@@ -731,10 +628,8 @@
   </div>
 </div>
 
-
 <!-- MEMBERS AREA -->
 <div id="members-area">
-
   <div class="members-header">
     <div class="welcome-label">Welcome, Brother</div>
     <div class="welcome-name" id="display-name">—</div>
@@ -751,7 +646,6 @@
     </div>
   </div>
 
-  <!-- DEGREE TABS -->
   <div class="tab-bar">
     <div class="deg-tab ea" id="tab-ea" onclick="showPanel('ea')">
       <span class="deg-tab-num">&#9670;</span>
@@ -780,19 +674,19 @@
         <span class="c-icon ea">&#9710;</span>
         <div class="c-title ea">Summons</div>
         <div class="c-desc">Official summons and notices for Entered Apprentice members.</div>
-        <ul class="doc-list ea" id="docs-ea-summons"></ul>
+        <ul class="doc-list ea" id="docs-ea-summons"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card ea">
         <span class="c-icon ea">&#9780;</span>
         <div class="c-title ea">First Degree Resources</div>
         <div class="c-desc">Study materials and guidance for the Entered Apprentice.</div>
-        <ul class="doc-list ea" id="docs-ea-resources"></ul>
+        <ul class="doc-list ea" id="docs-ea-resources"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card ea">
         <span class="c-icon ea">&#9883;</span>
         <div class="c-title ea">Lodge Information</div>
         <div class="c-desc">General lodge information and notices for all members.</div>
-        <ul class="doc-list ea" id="docs-ea-general"></ul>
+        <ul class="doc-list ea" id="docs-ea-general"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
     </div>
   </div>
@@ -807,19 +701,19 @@
         <span class="c-icon fc">&#9710;</span>
         <div class="c-title fc">Summons</div>
         <div class="c-desc">Summons and notices for the Second Degree.</div>
-        <ul class="doc-list fc" id="docs-fc-summons"></ul>
+        <ul class="doc-list fc" id="docs-fc-summons"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card fc">
         <span class="c-icon fc">&#9741;</span>
         <div class="c-title fc">Minutes of Meetings</div>
         <div class="c-desc">Approved minutes from regular communications.</div>
-        <ul class="doc-list fc" id="docs-fc-minutes"></ul>
+        <ul class="doc-list fc" id="docs-fc-minutes"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card fc">
         <span class="c-icon fc">&#9780;</span>
         <div class="c-title fc">Second Degree Resources</div>
         <div class="c-desc">Study materials and working documents for Fellows of the Craft.</div>
-        <ul class="doc-list fc" id="docs-fc-resources"></ul>
+        <ul class="doc-list fc" id="docs-fc-resources"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
     </div>
   </div>
@@ -834,37 +728,37 @@
         <span class="c-icon mm">&#9710;</span>
         <div class="c-title mm">Summons and Business</div>
         <div class="c-desc">Full summons including all lodge business for Master Masons.</div>
-        <ul class="doc-list mm" id="docs-mm-summons"></ul>
+        <ul class="doc-list mm" id="docs-mm-summons"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card mm">
         <span class="c-icon mm">&#9741;</span>
         <div class="c-title mm">Minutes and Financials</div>
         <div class="c-desc">Full lodge minutes and financial reporting.</div>
-        <ul class="doc-list mm" id="docs-mm-minutes"></ul>
+        <ul class="doc-list mm" id="docs-mm-minutes"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card mm">
         <span class="c-icon mm">&#9878;</span>
         <div class="c-title mm">Ceremonial and Ritual</div>
         <div class="c-desc">Officer duties, ceremonial working, and lodge protocols.</div>
-        <ul class="doc-list mm" id="docs-mm-ceremonial"></ul>
+        <ul class="doc-list mm" id="docs-mm-ceremonial"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card mm">
         <span class="c-icon mm">&#10023;</span>
         <div class="c-title mm">Centenary 1927–2027</div>
         <div class="c-desc">Planning and correspondence for the lodge centenary.</div>
-        <ul class="doc-list mm" id="docs-mm-centenary"></ul>
+        <ul class="doc-list mm" id="docs-mm-centenary"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card mm">
         <span class="c-icon mm">&#9780;</span>
         <div class="c-title mm">Governance Documents</div>
         <div class="c-desc">Full bylaws, Irish Constitution, and standing orders.</div>
-        <ul class="doc-list mm" id="docs-mm-governance"></ul>
+        <ul class="doc-list mm" id="docs-mm-governance"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card mm">
         <span class="c-icon mm">&#9883;</span>
         <div class="c-title mm">SCARF — Full Reports</div>
         <div class="c-desc">Complete charity reporting and planning for Master Masons.</div>
-        <ul class="doc-list mm" id="docs-mm-scarf"></ul>
+        <ul class="doc-list mm" id="docs-mm-scarf"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
     </div>
   </div>
@@ -875,22 +769,37 @@
   </footer>
 </div>
 
-
 <script>
 // ═══════════════════════════════════════════════════════════════════
 //  CONFIGURATION — Webmaster edits these two values only
 //
-//  APPS_SCRIPT_URL: paste the Web App URL from your Google Apps Script deployment
-//  API_SECRET_KEY:  must match SECRET_KEY in the Apps Script exactly
+//  ENCRYPTION_KEY: your chosen secret key — must match what you
+//  typed into the SC608_Encoder.html tool when generating the payload.
+//
+//  ENCRYPTED_PAYLOAD: the string produced by SC608_Encoder.html.
+//  Run the encoder tool, fill in the members and monthly code,
+//  copy the output, and paste it between the quotes below.
+//  Do this each month when the monthly code changes, and whenever
+//  a member is added, removed, or their access changes.
 // ═══════════════════════════════════════════════════════════════════
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpnZX7Myfmd4i2hZz-WSNrQFX9aIlTOLEMu0II92vyove6TfApSUN6XJ9ClObN3Nwy/exec';
-const API_SECRET_KEY  = 'SCL608-IrishConstitution-1927';
+const ENCRYPTION_KEY     = 'SCL608-IrishConstitution-1927';
+const ENCRYPTED_PAYLOAD  = 'PASTE_ENCRYPTED_PAYLOAD_HERE';
 
 // ═══════════════════════════════════════════════════════════════════
-//  Document card mapping — links Sheet "section" values to card list IDs
-//  Add new cards here if you add sections to the Sheet
+//  Document links — Webmaster adds links here directly.
+//  Format: { title, section, link }
+//  Section must match one of the card IDs below (e.g. mm-summons)
+//  Link: a Google Drive shareable link or any URL
 // ═══════════════════════════════════════════════════════════════════
+
+const DOCUMENTS = [
+  // Examples — uncomment and edit:
+  // { title: 'April 2025 Summons',       section: 'mm-summons',    link: 'https://drive.google.com/...' },
+  // { title: 'March 2025 Minutes',       section: 'mm-minutes',    link: 'https://drive.google.com/...' },
+  // { title: 'Lodge Bylaws',             section: 'mm-governance', link: 'https://drive.google.com/...' },
+  // { title: 'April 2025 EA Summons',    section: 'ea-summons',    link: 'https://drive.google.com/...' },
+];
 
 const CARD_MAP = {
   'ea-summons':    'docs-ea-summons',
@@ -909,141 +818,84 @@ const CARD_MAP = {
 
 // ═══════════════════════════════════════════════════════════════════
 
-let memberList   = [];
-let monthlyCode  = '';
+let memberList    = [];
+let monthlyCode   = '';
 let currentMember = null;
 
-// ─── Boot ─────────────────────────────────────────────────────────
 (async function boot() {
-  await loadFromAPI();
+  populateDocuments();
 
-  // Keyboard navigation
+  if (ENCRYPTED_PAYLOAD !== 'WDxaB03fbPkBz1e8J9CSGbabgHP2RrblC1FccRWD2stNG6h6P+lE+o9nhy4Wt05ddvgme/+WWfCpOm9U1g4BtKh8bkd57O7eqCxfJ2NfegxaOB2sPWh3bRH68N3hkC8bRyHj9up6aaHIxSrEJEpTcbeB+4l0vb4fQitc+JDcNXkxVkIxEOL/j+ReOQ4c/WCwWC3UkA==') {
+    try {
+      const decrypted = await decryptPayload(ENCRYPTED_PAYLOAD, ENCRYPTION_KEY);
+      const data      = JSON.parse(decrypted);
+      memberList  = data.members     || [];
+      monthlyCode = data.monthlyCode || '';
+    } catch(e) {
+      console.error('Failed to decrypt member data. Check your ENCRYPTION_KEY matches the encoder.', e);
+    }
+  }
+
   document.getElementById('inp-name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('inp-pin').focus(); });
   document.getElementById('inp-pin').addEventListener('keydown',  e => { if (e.key === 'Enter') submitStep1(); });
   document.getElementById('inp-code').addEventListener('keydown', e => { if (e.key === 'Enter') submitStep2(); });
 
-  // Restore session
   const saved = sessionStorage.getItem('sc608_member');
   if (saved) {
-    try {
-      currentMember = JSON.parse(saved);
-      showMembersArea();
-      return;
-    } catch(e) { sessionStorage.removeItem('sc608_member'); }
+    try { currentMember = JSON.parse(saved); showMembersArea(); return; }
+    catch(e) { sessionStorage.removeItem('sc608_member'); }
   }
-
-  showAuth();
 })();
 
-// ─── API call via JSONP (bypasses CORS restrictions on Apps Script) ─
-function loadFromAPI() {
-  return new Promise((resolve) => {
-    const cbName = 'sc608cb_' + Date.now();
-
-    const timer = setTimeout(() => {
-      cleanup();
-      console.error('API timeout.');
-      memberList  = [];
-      monthlyCode = '';
-      resolve();
-    }, 10000);
-
-    function cleanup() {
-      clearTimeout(timer);
-      delete window[cbName];
-      const el = document.getElementById('jsonp-script');
-      if (el) el.remove();
-    }
-
-    window[cbName] = function(data) {
-      cleanup();
-      if (data.error) {
-        console.error('API error:', data.error);
-        memberList  = [];
-        monthlyCode = '';
-      } else {
-        memberList  = data.members     || [];
-        monthlyCode = data.monthlyCode || '';
-        populateDocuments(data.documents || []);
-      }
-      resolve();
-    };
-
-    const script   = document.createElement('script');
-    script.id      = 'jsonp-script';
-    script.src     = APPS_SCRIPT_URL + '?key=' + encodeURIComponent(API_SECRET_KEY) + '&action=getAll&callback=' + cbName;
-    script.onerror = function() {
-      cleanup();
-      console.error('JSONP failed to load.');
-      memberList  = [];
-      monthlyCode = '';
-      resolve();
-    };
-    document.head.appendChild(script);
-  });
+// ─── AES-GCM Decryption ───────────────────────────────────────────
+async function decryptPayload(b64, password) {
+  const buf     = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const salt    = buf.slice(0, 16);
+  const iv      = buf.slice(16, 28);
+  const data    = buf.slice(28);
+  const enc     = new TextEncoder();
+  const keyMat  = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  const aesKey  = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+    keyMat,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['decrypt']
+  );
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, aesKey, data);
+  return new TextDecoder().decode(plain);
 }
 
-// ─── Document population ──────────────────────────────────────────
-function populateDocuments(docs) {
-  // Clear all lists first
+// ─── Documents ────────────────────────────────────────────────────
+function populateDocuments() {
+  if (!DOCUMENTS.length) return;
   Object.values(CARD_MAP).forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
-
-  // Group documents by section
-  const grouped = {};
-  docs.forEach(doc => {
-    const key = doc.section; // e.g. "mm-summons"
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(doc);
-  });
-
-  // Render into the correct list
-  Object.entries(grouped).forEach(([section, items]) => {
-    const listId = CARD_MAP[section];
+  DOCUMENTS.forEach(doc => {
+    const listId = CARD_MAP[doc.section];
     if (!listId) return;
     const ul = document.getElementById(listId);
     if (!ul) return;
-
-    items.forEach(doc => {
-      const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.href   = doc.link;
-      a.target = '_blank';
-      a.rel    = 'noopener noreferrer';
-      a.textContent = doc.title;
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
-  });
-
-  // Show placeholder in empty lists
-  Object.values(CARD_MAP).forEach(id => {
-    const ul = document.getElementById(id);
-    if (ul && ul.children.length === 0) {
-      const p = document.createElement('p');
-      p.className = 'doc-empty';
-      p.textContent = 'No documents uploaded yet.';
-      ul.parentNode.insertBefore(p, ul);
-    }
+    const li = document.createElement('li');
+    const a  = document.createElement('a');
+    a.href   = doc.link;
+    a.target = '_blank';
+    a.rel    = 'noopener noreferrer';
+    a.textContent = doc.title;
+    li.appendChild(a);
+    ul.appendChild(li);
   });
 }
 
-// ─── Show auth / loading ──────────────────────────────────────────
-function showAuth() {
-  document.getElementById('loading-screen').style.display = 'none';
-  document.getElementById('auth-screen').style.display    = 'flex';
-}
-
-// ─── Step 1: Name + PIN ───────────────────────────────────────────
+// ─── Step 1 ───────────────────────────────────────────────────────
 function submitStep1() {
   const name = document.getElementById('inp-name').value.trim().toLowerCase();
   const pin  = document.getElementById('inp-pin').value.trim();
   const err  = document.getElementById('err1');
   err.style.display = 'none';
   if (!name || !pin) return;
-
   const found = memberList.find(m => m.name === name && m.pin === pin);
   if (!found) {
     err.style.display = 'block';
@@ -1051,38 +903,32 @@ function submitStep1() {
     document.getElementById('inp-pin').focus();
     return;
   }
-
   currentMember = found;
-
-  document.getElementById('sn1').classList.replace('active', 'done');
+  document.getElementById('sn1').classList.replace('active','done');
   document.getElementById('sn2').classList.add('active');
   document.getElementById('sl1').classList.remove('active');
   document.getElementById('sl2').classList.add('active');
-
   document.getElementById('step1').classList.remove('visible');
   document.getElementById('step2').classList.add('visible');
   setTimeout(() => document.getElementById('inp-code').focus(), 80);
 }
 
-// ─── Step 2: Monthly code ─────────────────────────────────────────
+// ─── Step 2 ───────────────────────────────────────────────────────
 function submitStep2() {
   const entered = document.getElementById('inp-code').value.trim().toUpperCase();
   const err     = document.getElementById('err2');
   err.style.display = 'none';
   if (!entered) return;
-
   if (entered !== monthlyCode.toUpperCase()) {
     err.style.display = 'block';
     document.getElementById('inp-code').value = '';
     document.getElementById('inp-code').focus();
     return;
   }
-
-  document.getElementById('sn2').classList.replace('active', 'done');
+  document.getElementById('sn2').classList.replace('active','done');
   document.getElementById('sn3').classList.add('active');
   document.getElementById('sl2').classList.remove('active');
   document.getElementById('sl3').classList.add('active');
-
   sessionStorage.setItem('sc608_member', JSON.stringify(currentMember));
   setTimeout(showMembersArea, 350);
 }
@@ -1100,16 +946,15 @@ function goBackToStep1() {
   currentMember = null;
 }
 
-// ─── Show members area ────────────────────────────────────────────
+// ─── Show members ─────────────────────────────────────────────────
 function showMembersArea() {
-  document.getElementById('loading-screen').style.display = 'none';
-  document.getElementById('auth-screen').style.display    = 'none';
+  document.getElementById('auth-screen').style.display = 'none';
   const area = document.getElementById('members-area');
   area.style.display = 'block';
 
   const pretty = currentMember.name.replace(/\b\w/g, c => c.toUpperCase());
   document.getElementById('display-name').textContent = 'Bro. ' + pretty;
-  document.getElementById('nav-name').textContent = pretty;
+  document.getElementById('nav-name').textContent     = pretty;
 
   const degs = [];
   if (currentMember.ea) degs.push('E.A.');
@@ -1117,10 +962,10 @@ function showMembersArea() {
   if (currentMember.mm) degs.push('M.M.');
   document.getElementById('display-degrees').textContent = degs.join(' · ') || 'Visitor';
 
-  document.getElementById('nav-public').style.display        = 'none';
-  document.getElementById('nav-member-panel').style.display  = 'flex';
+  document.getElementById('nav-public').style.display       = 'none';
+  document.getElementById('nav-member-panel').style.display = 'flex';
 
-  ['ea', 'fc', 'mm'].forEach(deg => {
+  ['ea','fc','mm'].forEach(deg => {
     if (!currentMember[deg]) {
       const tab = document.getElementById('tab-' + deg);
       tab.classList.add('locked');
@@ -1133,10 +978,9 @@ function showMembersArea() {
   else if (currentMember.ea) showPanel('ea');
 }
 
-// ─── Tab switching ────────────────────────────────────────────────
 function showPanel(deg) {
   if (currentMember && !currentMember[deg]) return;
-  ['ea', 'fc', 'mm'].forEach(d => {
+  ['ea','fc','mm'].forEach(d => {
     document.getElementById('panel-' + d).classList.remove('visible');
     document.getElementById('tab-'   + d).classList.remove('active');
   });
@@ -1144,25 +988,22 @@ function showPanel(deg) {
   document.getElementById('tab-'   + deg).classList.add('active');
 }
 
-// ─── Logout ───────────────────────────────────────────────────────
 function logout() {
   sessionStorage.removeItem('sc608_member');
   currentMember = null;
   document.getElementById('members-area').style.display       = 'none';
+  document.getElementById('auth-screen').style.display        = 'flex';
   document.getElementById('nav-public').style.display         = 'flex';
   document.getElementById('nav-member-panel').style.display   = 'none';
-
-  ['ea', 'fc', 'mm'].forEach(d => {
+  ['ea','fc','mm'].forEach(d => {
     const t = document.getElementById('tab-' + d);
-    t.classList.remove('locked', 'active');
+    t.classList.remove('locked','active');
     t.onclick = () => showPanel(d);
   });
-
   ['inp-name','inp-pin','inp-code'].forEach(id => document.getElementById(id).value = '');
   goBackToStep1();
-  showAuth();
 }
 </script>
-
 </body>
 </html>
+
