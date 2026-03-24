@@ -806,6 +806,11 @@ const ENCRYPTED_PAYLOAD  = 'G9WgeWt0rVtUCpci/vkCOKElg0MQ66gM76rmTTylhmDFHOJQgtQg
 
 const DOCUMENTS_SHEET_URL = 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE';
 
+// Static documents — add links here directly if not using the Sheet
+const STATIC_DOCUMENTS = [
+  { title: 'Opening Lodge', section: 'ea-resources', link: 'https://drive.google.com/file/d/1N01NTUCtEeYH1aUSvP4UDEfrheVTlJKD/view?usp=sharing' },
+];
+
 const CARD_MAP = {
   'ea-summons':    'docs-ea-summons',
   'ea-resources':  'docs-ea-resources',
@@ -873,19 +878,22 @@ async function decryptPayload(b64, password) {
 
 // ─── Documents — fetched from public Google Sheet CSV ────────────
 async function loadDocuments() {
-  if (DOCUMENTS_SHEET_URL === 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE') return;
-  try {
-    const res  = await fetch(DOCUMENTS_SHEET_URL);
-    const text = await res.text();
-    const rows = text.trim().split('\n').slice(1);
-    const docs = rows.map(row => {
-      const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-      return { title: cols[0], section: cols[1], link: cols[2] };
-    }).filter(d => d.title && d.section && d.link);
-    renderDocuments(docs);
-  } catch(err) {
-    console.warn('Could not load documents sheet:', err);
+  let docs = [...STATIC_DOCUMENTS];
+  if (DOCUMENTS_SHEET_URL !== 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE') {
+    try {
+      const res  = await fetch(DOCUMENTS_SHEET_URL);
+      const text = await res.text();
+      const rows = text.trim().split('\n').slice(1);
+      const sheetDocs = rows.map(row => {
+        const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+        return { title: cols[0], section: cols[1], link: cols[2] };
+      }).filter(d => d.title && d.section && d.link);
+      docs = [...docs, ...sheetDocs];
+    } catch(err) {
+      console.warn('Could not load documents sheet:', err);
+    }
   }
+  renderDocuments(docs);
 }
 
 function renderDocuments(docs) {
