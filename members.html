@@ -784,7 +784,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 const ENCRYPTION_KEY     = 'SCL608-IrishConstitution-1927';
-const ENCRYPTED_PAYLOAD  = 'fHBcyMFoSG2GbhCH65U9btdygQpvAxz+FSWl4Gb+B9/iTgSdmJx6qhCB2yn9GBLfJG4XCwJSo5xf0p5ObDxzY08ulfrYMk4P04wkUKXioU5xMwc5k8WEF+wc5SVAs5snE1EwIS4fONnRJJNWZc4aHCG/hdgOsxkJpGh1tw9BIPLgTynl+MI4Vzizrd1XPwBZs+PPKw==';
+const ENCRYPTED_PAYLOAD  = 'IgZefmMpyBG4UG0hZf0OOmR/O6GMctjW34ojtEwFLfiRL9BJh6hC6xen/wBNYoFOAJQJSSFF3NUPzhUq/dFrE/zBsWrKdm2TEzDz19VZBal1RbobIaaVmKW4qL+MBkf1492zFMxrX+1yRXLIK1A2TOFAWDLU8qo9NQu4vBSBGnjfUMZ6I5NC44Qr1L5ld3RlWo04KKU44VGeZBJuCPs7q9kytACMWptoDrEbZB2xkEKMvaobd+sXcQ4+a/OfLYOXREf62mP0klpVHyVz8HOWPjRSye5dLzI=';
 
 // ═══════════════════════════════════════════════════════════════════
 //  Document links — Webmaster adds links here directly.
@@ -825,7 +825,7 @@ let currentMember = null;
 (async function boot() {
   populateDocuments();
 
-  if (ENCRYPTED_PAYLOAD !== 'WDxaB03fbPkBz1e8J9CSGbabgHP2RrblC1FccRWD2stNG6h6P+lE+o9nhy4Wt05ddvgme/+WWfCpOm9U1g4BtKh8bkd57O7eqCxfJ2NfegxaOB2sPWh3bRH68N3hkC8bRyHj9up6aaHIxSrEJEpTcbeB+4l0vb4fQitc+JDcNXkxVkIxEOL/j+ReOQ4c/WCwWC3UkA==') {
+  if (ENCRYPTED_PAYLOAD !== 'IgZefmMpyBG4UG0hZf0OOmR/O6GMctjW34ojtEwFLfiRL9BJh6hC6xen/wBNYoFOAJQJSSFF3NUPzhUq/dFrE/zBsWrKdm2TEzDz19VZBal1RbobIaaVmKW4qL+MBkf1492zFMxrX+1yRXLIK1A2TOFAWDLU8qo9NQu4vBSBGnjfUMZ6I5NC44Qr1L5ld3RlWo04KKU44VGeZBJuCPs7q9kytACMWptoDrEbZB2xkEKMvaobd+sXcQ4+a/OfLYOXREf62mP0klpVHyVz8HOWPjRSye5dLzI=') {
     try {
       const decrypted = await decryptPayload(ENCRYPTED_PAYLOAD, ENCRYPTION_KEY);
       const data      = JSON.parse(decrypted);
@@ -1006,5 +1006,4 @@ function logout() {
 </script>
 </body>
 </html>
-
 
