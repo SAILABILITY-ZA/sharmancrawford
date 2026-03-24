@@ -787,19 +787,24 @@ const ENCRYPTION_KEY     = 'SCL608-IrishConstitution-1927';
 const ENCRYPTED_PAYLOAD  = 'G9WgeWt0rVtUCpci/vkCOKElg0MQ66gM76rmTTylhmDFHOJQgtQgeosiGO8OohZBSM+MPkU3WmDaozGY+G+XC/c9pI1QxL5VJgJdJa+gL64EHL/Ncnn8FNygbNrg1/JGRJGmBnC56u+3PplOcWRuRmzAjtU5pr7mEXCTcfyEdA9c4x/bgpGxpDqwsb40fJxmE6RBPPIEBhd/hW3HE2E+ntvFk0BI7Zyfy8W9I/7J8fBgmi3EzKMZCRFN9lSPVJRjfseJF4gdn8q57TDUMfZ6T8dGGYS+oHE=';
 
 // ═══════════════════════════════════════════════════════════════════
-//  Document links — Webmaster adds links here directly.
-//  Format: { title, section, link }
-//  Section must match one of the card IDs below (e.g. mm-summons)
-//  Link: a Google Drive shareable link or any URL
+//  DOCUMENTS — fetched live from a public Google Sheet CSV.
+//
+//  GOOGLE SHEET SETUP (one time):
+//  1. Create a new Google Sheet.
+//  2. Row 1 headers: Title | Section | Link
+//  3. Add one document per row. Section values:
+//       ea-summons, ea-resources, ea-general
+//       fc-summons, fc-minutes, fc-resources
+//       mm-summons, mm-minutes, mm-ceremonial
+//       mm-centenary, mm-governance, mm-scarf
+//  4. Link: Google Drive shareable link (Anyone with the link)
+//  5. Publish as CSV: File > Share > Publish to web > CSV > Publish
+//  6. Paste the CSV URL below as DOCUMENTS_SHEET_URL
+//
+//  To add a document: add a row to the Sheet. Done. No HTML changes.
 // ═══════════════════════════════════════════════════════════════════
 
-const DOCUMENTS = [
-  // Examples — uncomment and edit:
-  // { title: 'April 2025 Summons',       section: 'mm-summons',    link: 'https://drive.google.com/...' },
-  // { title: 'March 2025 Minutes',       section: 'mm-minutes',    link: 'https://drive.google.com/...' },
-  // { title: 'Lodge Bylaws',             section: 'mm-governance', link: 'https://drive.google.com/...' },
-  // { title: 'April 2025 EA Summons',    section: 'ea-summons',    link: 'https://drive.google.com/...' },
-];
+const DOCUMENTS_SHEET_URL = 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE';
 
 const CARD_MAP = {
   'ea-summons':    'docs-ea-summons',
@@ -823,7 +828,7 @@ let monthlyCode   = '';
 let currentMember = null;
 
 (async function boot() {
-  populateDocuments();
+  await loadDocuments();
 
   if (ENCRYPTED_PAYLOAD !== 'PASTE_ENCRYPTED_PAYLOAD_HERE') {
     try {
@@ -866,14 +871,29 @@ async function decryptPayload(b64, password) {
   return new TextDecoder().decode(plain);
 }
 
-// ─── Documents ────────────────────────────────────────────────────
-function populateDocuments() {
-  if (!DOCUMENTS.length) return;
+// ─── Documents — fetched from public Google Sheet CSV ────────────
+async function loadDocuments() {
+  if (DOCUMENTS_SHEET_URL === 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE') return;
+  try {
+    const res  = await fetch(DOCUMENTS_SHEET_URL);
+    const text = await res.text();
+    const rows = text.trim().split('\n').slice(1);
+    const docs = rows.map(row => {
+      const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+      return { title: cols[0], section: cols[1], link: cols[2] };
+    }).filter(d => d.title && d.section && d.link);
+    renderDocuments(docs);
+  } catch(err) {
+    console.warn('Could not load documents sheet:', err);
+  }
+}
+
+function renderDocuments(docs) {
   Object.values(CARD_MAP).forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
-  DOCUMENTS.forEach(doc => {
+  docs.forEach(doc => {
     const listId = CARD_MAP[doc.section];
     if (!listId) return;
     const ul = document.getElementById(listId);
