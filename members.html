@@ -785,7 +785,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 const ENCRYPTION_KEY     = 'SCL608-IrishConstitution-1927';
-const ENCRYPTED_PAYLOAD  = 'G9WgeWt0rVtUCpci/vkCOKElg0MQ66gM76rmTTylhmDFHOJQgtQgeosiGO8OohZBSM+MPkU3WmDaozGY+G+XC/c9pI1QxL5VJgJdJa+gL64EHL/Ncnn8FNygbNrg1/JGRJGmBnC56u+3PplOcWRuRmzAjtU5pr7mEXCTcfyEdA9c4x/bgpGxpDqwsb40fJxmE6RBPPIEBhd/hW3HE2E+ntvFk0BI7Zyfy8W9I/7J8fBgmi3EzKMZCRFN9lSPVJRjfseJF4gdn8q57TDUMfZ6T8dGGYS+oHE=';
+const ENCRYPTED_PAYLOAD  = 's5pSLEfHA3clIfbz6ToCdrKmoA7qVfcg+MK7xWbCJ3Njhw/2pMqlrNciUBdx08tujLCJcbu4ub+JhZt/iTjZ8mzYfvLVCx1V1TlUH+s9lsgaYkY/ZVL2Q9N9D1gx8mwnyF3zIFNFxkXiJBAW3cJPy92tXwqvSs/MiHVL6O/I3oufuyjXvAC0qr4uGVcpHjMAVjF43IRx6V53DOZJA/4yoPvYaZH6CW+vGdIf5G91gzb4OTMHedQOjHInVjnk2q6v704g5IqFGyimaPHqhyI+UTZdj8sINouV1exKq/CTeNKu+pDfUkIyaC03NJGeuNzG8zu6yWtjxw==';
 
 // ═══════════════════════════════════════════════════════════════════
 //  DOCUMENTS — fetched live from a public Google Sheet CSV.
@@ -986,7 +986,8 @@ function showMembersArea() {
   renderDocuments(loadedDocs);
 
   const pretty = currentMember.name.replace(/\b\w/g, c => c.toUpperCase());
-  document.getElementById('display-name').textContent = 'Bro. ' + pretty;
+  const title  = currentMember.title || 'Bro.';
+  document.getElementById('display-name').textContent = title + ' ' + pretty;
   document.getElementById('nav-name').textContent     = pretty;
 
   const degs = [];
