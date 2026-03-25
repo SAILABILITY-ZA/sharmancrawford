@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sharman Crawford Lodge No. 608 — Cape Town</title>
+<title>Members — Sharman Crawford Lodge No. 608</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -29,9 +29,9 @@
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
-  /* GRAIN OVERLAY */
   body::after {
     content: '';
     position: fixed;
@@ -42,7 +42,6 @@
     z-index: 9999;
   }
 
-  /* NAV — logo doubled to 120px, padding tightened to suit */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -52,22 +51,14 @@
     justify-content: space-between;
     padding: 0.4rem 2.5rem;
     min-height: 136px;
-    background: rgba(10, 9, 5, 0.88);
+    background: rgba(10,9,5,0.92);
     backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
     overflow: visible;
   }
 
-  .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .nav-logo {
-    height: 120px;
-    width: auto;
-  }
+  .nav-left { display: flex; align-items: center; gap: 1.2rem; }
+  .nav-logo { height: 120px; width: auto; }
 
   .nav-title {
     font-family: 'Cinzel', serif;
@@ -83,11 +74,7 @@
     margin-top: 2px;
   }
 
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
 
   .nav-links a {
     color: var(--text-dim);
@@ -99,464 +86,470 @@
   }
 
   .nav-links a:hover { color: var(--gold); }
+  .nav-links a.active { color: var(--gold); }
 
-  .nav-links a.members-link {
+  .nav-member-panel { display: none; align-items: center; gap: 1.2rem; }
+
+  .nav-member-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
     color: var(--gold-dim);
-    border: 1px solid rgba(201, 168, 76, 0.2);
-    padding: 0.3rem 0.8rem;
-    transition: color 0.3s, border-color 0.3s;
   }
 
-  .nav-links a.members-link:hover {
-    color: var(--gold);
-    border-color: rgba(201, 168, 76, 0.5);
+  .nav-logout {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    padding: 0.38rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
   }
 
-  /* HERO — top padding increased to account for taller nav */
-  .hero {
+  .nav-logout:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  /* AUTH */
+  #auth-screen {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 12rem 2rem 4rem;
+    padding: 11rem 2rem 4rem;
     position: relative;
-    overflow: hidden;
   }
 
-  .hero::before {
+  #auth-screen::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 50% 30%, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+    background: radial-gradient(ellipse at 50% 40%, rgba(201,168,76,0.05) 0%, transparent 70%);
     pointer-events: none;
   }
 
-  .hero-emblem {
-    width: 160px;
-    height: auto;
-    margin-bottom: 2.5rem;
-    opacity: 0.9;
-    filter: drop-shadow(0 0 40px rgba(201, 168, 76, 0.15));
-    animation: fadeUp 1.2s ease-out;
+  .auth-box {
+    width: 100%;
+    max-width: 480px;
+    background: var(--deep);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 3.5rem 3rem;
+    text-align: center;
+    animation: fadeUp 0.8s ease-out both;
   }
 
-  .hero h1 {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.8rem, 4vw, 3.2rem);
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    color: var(--gold);
-    margin-bottom: 0.6rem;
-    animation: fadeUp 1.2s ease-out 0.2s both;
+  .auth-emblem {
+    width: 144px;
+    margin-bottom: 1.8rem;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 24px rgba(201,168,76,0.12));
   }
 
-  .hero-lodge-num {
+  .auth-title {
     font-family: 'Cinzel', serif;
     font-size: 1rem;
-    letter-spacing: 0.3em;
-    color: var(--gold-dim);
-    margin-bottom: 1.5rem;
-    animation: fadeUp 1.2s ease-out 0.35s both;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 0.35rem;
   }
 
-  .hero-constitution {
-    font-size: 0.8rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+  .auth-subtitle {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
     color: var(--text-dim);
-    margin-bottom: 2.5rem;
-    animation: fadeUp 1.2s ease-out 0.5s both;
+    margin-bottom: 2.2rem;
   }
 
-  .hero-quote {
-    max-width: 600px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.25rem;
-    font-style: italic;
-    font-weight: 300;
-    color: var(--text-dim);
-    line-height: 1.7;
-    animation: fadeUp 1.2s ease-out 0.7s both;
-  }
-
-  .hero-quote cite {
-    display: block;
-    margin-top: 0.8rem;
-    font-size: 0.8rem;
-    font-style: normal;
-    letter-spacing: 0.1em;
-    color: var(--gold-dim);
-  }
-
-  /* DIVIDER */
-  .divider {
+  .step-track {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    padding: 2rem 0;
-  }
-
-  .divider-line {
-    width: 80px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  }
-
-  .divider-dot {
-    width: 6px;
-    height: 6px;
-    border: 1px solid var(--gold-dim);
-    transform: rotate(45deg);
-  }
-
-  /* SECTIONS */
-  section {
-    padding: 5rem 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-
-  .section-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 400;
-    color: var(--gold-light);
-    text-align: center;
-    margin-bottom: 2rem;
-    line-height: 1.4;
-  }
-
-  .section-body {
-    font-size: 0.95rem;
-    line-height: 1.85;
-    color: var(--text-dim);
-    text-align: center;
-    max-width: 680px;
-    margin: 0 auto;
-  }
-
-  .section-body p + p { margin-top: 1.5rem; }
-  .section-body em { color: var(--text); font-style: italic; }
-
-  /* PHILOSOPHY */
-  .philosophy-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-
-  .phil-card {
-    background: var(--deep);
-    border: 1px solid rgba(201, 168, 76, 0.1);
-    padding: 2.5rem 2rem;
-    text-align: center;
-    transition: border-color 0.4s, transform 0.4s;
-  }
-
-  .phil-card:hover {
-    border-color: rgba(201, 168, 76, 0.3);
-    transform: translateY(-4px);
-  }
-
-  .phil-card-icon {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    display: block;
-    color: var(--gold);
-  }
-
-  .phil-card h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    margin-bottom: 1rem;
-  }
-
-  .phil-card p {
-    font-size: 0.85rem;
-    line-height: 1.7;
-    color: var(--text-dim);
-  }
-
-  /* MEETING */
-  .meeting-card {
-    background: var(--deep);
-    border: 1px solid rgba(201, 168, 76, 0.12);
-    padding: 3rem;
-    text-align: center;
-    margin-top: 2rem;
-  }
-
-  .meeting-when {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    color: var(--gold-light);
-    margin-bottom: 0.5rem;
-  }
-
-  .meeting-where {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-    margin-bottom: 1.5rem;
-  }
-
-  .meeting-venue {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-style: italic;
-    color: var(--text);
-  }
-
-  .meeting-note {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-top: 1rem;
-    opacity: 0.7;
-  }
-
-  /* CENTENARY */
-  .centenary-banner {
-    background: linear-gradient(135deg, var(--irish-green) 0%, #0d2e1a 100%);
-    border: 1px solid rgba(42, 122, 74, 0.3);
-    padding: 3rem 2.5rem;
-    text-align: center;
-    margin-top: 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .centenary-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .centenary-year {
-    font-family: 'Cinzel', serif;
-    font-size: 2.5rem;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-  }
-
-  .centenary-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    color: var(--text);
-    line-height: 1.7;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  .centenary-date {
-    font-size: 0.75rem;
-    color: var(--gold-dim);
-    letter-spacing: 0.15em;
-    margin-top: 1rem;
-  }
-
-  /* CHARITY */
-  .charity-card {
-    background: var(--deep);
-    border: 1px solid rgba(201, 168, 76, 0.1);
-    padding: 3rem;
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    margin-top: 2rem;
-    transition: border-color 0.4s;
-  }
-
-  .charity-card:hover { border-color: rgba(201, 168, 76, 0.25); }
-
-  .charity-logo { width: 120px; height: auto; flex-shrink: 0; }
-
-  .charity-info h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--gold);
-    margin-bottom: 0.8rem;
-  }
-
-  .charity-info p {
-    font-size: 0.85rem;
-    line-height: 1.7;
-    color: var(--text-dim);
-  }
-
-  .charity-info a {
-    color: var(--gold);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s;
-  }
-
-  .charity-info a:hover { border-bottom-color: var(--gold); }
-
-  /* CONTACT */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .contact-item { text-align: center; padding: 1.5rem; }
-
-  .contact-item-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--gold-dim);
     margin-bottom: 0.6rem;
   }
 
-  .contact-item-value { font-size: 0.9rem; color: var(--text); }
+  .step-node {
+    width: 30px; height: 30px;
+    border: 1px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--gold-dim);
+    transition: all 0.4s;
+    flex-shrink: 0;
+  }
 
-  .contact-item-value a { color: var(--gold); text-decoration: none; }
+  .step-node.active { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 14px rgba(201,168,76,0.15); }
+  .step-node.done   { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--dark); }
 
-  /* FOOTER */
+  .step-connector { flex: 1; height: 1px; background: rgba(122,99,48,0.3); max-width: 80px; }
+
+  .step-labels { display: flex; justify-content: space-between; margin-bottom: 2rem; }
+
+  .step-lbl {
+    font-size: 0.57rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    width: 30px;
+    text-align: center;
+  }
+
+  .step-lbl.active { color: var(--gold-dim); }
+
+  .auth-step { display: none; }
+  .auth-step.visible { display: block; }
+
+  .field-label {
+    font-size: 0.67rem;
+    letter-spacing: 0.18em;
+    color: var(--gold-dim);
+    text-align: left;
+    margin-bottom: 0.45rem;
+    text-transform: uppercase;
+  }
+
+  .auth-input {
+    width: 100%;
+    background: var(--mid);
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.8rem 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.03em;
+  }
+
+  .auth-input:focus { border-color: rgba(201,168,76,0.45); }
+
+  .auth-input.code-style {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.4em;
+  }
+
+  .auth-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    padding: 0.85rem 2rem;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  .auth-btn:hover { background: rgba(201,168,76,0.07); border-color: rgba(201,168,76,0.65); }
+
+  .auth-error {
+    background: rgba(140,30,30,0.12);
+    border: 1px solid rgba(160,40,40,0.28);
+    color: #e07070;
+    font-size: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.55;
+    display: none;
+    text-align: left;
+  }
+
+  .auth-info {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-top: 1.2rem;
+    line-height: 1.7;
+  }
+
+  .auth-info a { color: var(--gold-dim); cursor: pointer; }
+  .auth-info a:hover { color: var(--gold); }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 0;
+  }
+
+  .auth-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(122,99,48,0.4), transparent);
+  }
+
+  .auth-divider-diamond {
+    width: 5px; height: 5px;
+    border: 1px solid var(--gold-dim);
+    transform: rotate(45deg);
+    opacity: 0.5;
+  }
+
+  /* MEMBERS AREA */
+  #members-area { display: none; padding-top: 150px; min-height: 100vh; }
+
+  .members-header {
+    text-align: center;
+    padding: 3.5rem 2rem 2rem;
+    position: relative;
+  }
+
+  .members-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.05) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .welcome-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+  }
+
+  .welcome-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 400;
+    color: var(--gold-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .degree-badge {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    padding: 0.28rem 1rem;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  .notice-wrap { max-width: 960px; margin: 2rem auto 0; padding: 0 2rem; }
+
+  .notice-bar {
+    background: linear-gradient(135deg, rgba(26,74,46,0.22) 0%, rgba(13,46,26,0.18) 100%);
+    border: 1px solid rgba(42,122,74,0.22);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  .notice-icon { color: var(--gold); flex-shrink: 0; margin-top: 0.1rem; }
+
+  .notice-heading {
+    font-family: 'Cinzel', serif;
+    font-size: 0.63rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .tab-bar {
+    display: flex;
+    justify-content: center;
+    max-width: 780px;
+    margin: 2.5rem auto 0;
+    padding: 0 2rem;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .deg-tab {
+    flex: 1;
+    padding: 1.1rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+    top: 1px;
+    max-width: 200px;
+  }
+
+  .deg-tab-num { font-size: 0.9rem; margin-bottom: 0.25rem; display: block; }
+
+  .deg-tab-code {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+    transition: color 0.3s;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .deg-tab-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    transition: color 0.3s;
+    margin-top: 0.1rem;
+    display: block;
+  }
+
+  .deg-tab.locked { opacity: 0.25; cursor: not-allowed; }
+
+  .deg-tab.ea.active { border-bottom-color: #5a80bb; }
+  .deg-tab.ea.active .deg-tab-code,
+  .deg-tab.ea.active .deg-tab-name { color: #7aaae0; }
+
+  .deg-tab.fc.active { border-bottom-color: #9060aa; }
+  .deg-tab.fc.active .deg-tab-code,
+  .deg-tab.fc.active .deg-tab-name { color: #c090e0; }
+
+  .deg-tab.mm.active { border-bottom-color: var(--irish-green-light); }
+  .deg-tab.mm.active .deg-tab-code,
+  .deg-tab.mm.active .deg-tab-name { color: #70cc90; }
+
+  .deg-tab:not(.locked):not(.active):hover .deg-tab-code,
+  .deg-tab:not(.locked):not(.active):hover .deg-tab-name { color: var(--text); }
+
+  .deg-panel { display: none; max-width: 960px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .deg-panel.visible { display: block; animation: fadeUp 0.6s ease-out both; }
+
+  .panel-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 0.6rem;
+  }
+
+  .panel-eyebrow.ea { color: #7aaae0; }
+  .panel-eyebrow.fc { color: #c090e0; }
+  .panel-eyebrow.mm { color: #70cc90; }
+
+  .panel-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-weight: 400;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  .panel-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin: 0.5rem auto 2.5rem;
+    max-width: 520px;
+    line-height: 1.65;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+    gap: 1.4rem;
+  }
+
+  .c-card { background: var(--deep); padding: 1.8rem; transition: border-color 0.35s, transform 0.3s; }
+
+  .c-card.ea { border: 1px solid rgba(58,90,138,0.18); }
+  .c-card.ea:hover { border-color: rgba(90,128,187,0.45); transform: translateY(-3px); }
+
+  .c-card.fc { border: 1px solid rgba(110,60,130,0.18); }
+  .c-card.fc:hover { border-color: rgba(160,100,200,0.45); transform: translateY(-3px); }
+
+  .c-card.mm { border: 1px solid rgba(26,74,46,0.22); }
+  .c-card.mm:hover { border-color: rgba(42,122,74,0.5); transform: translateY(-3px); }
+
+  .c-icon { font-size: 1.25rem; margin-bottom: 0.75rem; display: block; }
+  .c-icon.ea { color: #7aaae0; }
+  .c-icon.fc { color: #c090e0; }
+  .c-icon.mm { color: #70cc90; }
+
+  .c-title { font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.13em; margin-bottom: 0.65rem; }
+  .c-title.ea { color: #7aaae0; }
+  .c-title.fc { color: #c090e0; }
+  .c-title.mm { color: #70cc90; }
+
+  .c-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 0.8rem; }
+
+  .doc-list { list-style: none; }
+
+  .doc-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    font-size: 0.76rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    transition: color 0.3s;
+  }
+
+  .doc-list li:last-child { border-bottom: none; }
+  .doc-list li a { color: inherit; text-decoration: none; flex: 1; transition: color 0.3s; }
+  .doc-list li:hover a { color: var(--text); }
+  .doc-list li::before { content: '◆'; font-size: 0.32rem; flex-shrink: 0; }
+  .doc-list.ea li::before { color: #3a5a8a; }
+  .doc-list.fc li::before { color: #7a4a8a; }
+  .doc-list.mm li::before { color: var(--irish-green-light); }
+
+  .doc-empty { font-size: 0.75rem; color: var(--text-dim); font-style: italic; opacity: 0.6; padding: 0.4rem 0; }
+
   footer {
     text-align: center;
     padding: 3rem 2rem;
-    border-top: 1px solid rgba(201, 168, 76, 0.1);
-    margin-top: 3rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    margin-top: 2rem;
   }
 
   .footer-masonic {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-style: italic;
     color: var(--gold-dim);
     letter-spacing: 0.1em;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.7rem;
   }
 
-  .footer-copy { font-size: 0.65rem; color: var(--text-dim); opacity: 0.5; }
+  .footer-copy { font-size: 0.62rem; color: var(--text-dim); opacity: 0.5; }
 
-  /* ANIMATIONS */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
+    from { opacity: 0; transform: translateY(22px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .reveal { opacity: 1; transform: translateY(0); }
-
-  /* RESPONSIVE */
-  /* LIGHT BEAM — pure CSS, GPU only, zero canvas cost */
-  .beam-wrap {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .beam {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 3px;
-    height: 55vh;
-    transform-origin: 50% 0%;
-    animation: sweep 8s ease-in-out infinite;
-    border-radius: 0 0 40px 40px;
-  }
-
-  .beam-1 {
-    background: linear-gradient(180deg, rgba(201,168,76,0.55) 0%, rgba(201,168,76,0.08) 60%, transparent 100%);
-    animation-delay: 0s;
-  }
-
-  .beam-2 {
-    background: linear-gradient(180deg, rgba(201,168,76,0.3) 0%, rgba(201,168,76,0.04) 60%, transparent 100%);
-    width: 2px;
-    animation-delay: -4s;
-    animation-duration: 10s;
-  }
-
-  .beam-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
-    animation: glow-pulse 4s ease-in-out infinite;
-  }
-
-  @keyframes sweep {
-    0%   { transform: rotate(-35deg); opacity: 0.7; }
-    25%  { transform: rotate(0deg);   opacity: 1;   }
-    50%  { transform: rotate(35deg);  opacity: 0.7; }
-    75%  { transform: rotate(0deg);   opacity: 1;   }
-    100% { transform: rotate(-35deg); opacity: 0.7; }
-  }
-
-  @keyframes glow-pulse {
-    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1);    }
-    50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.15); }
-  }
-
   @media (max-width: 768px) {
-    nav { padding: 0.5rem 1.2rem; }
+    nav { padding: 0.4rem 1.2rem; min-height: 100px; }
     .nav-links { display: none; }
-    .nav-links.show {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 100%;
-      left: 0; right: 0;
-      background: rgba(10,9,5,0.97);
-      padding: 1.5rem 2rem;
-      border-bottom: 1px solid rgba(201,168,76,0.15);
-      gap: 1.2rem;
-    }
     .nav-logo { height: 80px; }
-    .hero { padding: 8rem 1.5rem 3rem; }
-    .hero-emblem { width: 120px; }
-    section { padding: 3rem 1.5rem; }
-    .charity-card { flex-direction: column; text-align: center; }
-    .meeting-card, .centenary-banner { padding: 2rem 1.5rem; }
+    .auth-box { padding: 2.5rem 1.6rem; }
+    .auth-emblem { width: 100px; }
+    .content-grid { grid-template-columns: 1fr; }
+    .tab-bar { padding: 0 1rem; }
+    .deg-panel { padding: 2rem 1.2rem 4rem; }
+    #members-area { padding-top: 115px; }
   }
-
-  .mobile-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: var(--gold);
-    font-size: 1.4rem;
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) { .mobile-toggle { display: block; } }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-left">
     <img src="SC_Logo.png" alt="Sharman Crawford Lodge" class="nav-logo">
@@ -565,200 +558,484 @@
       <div class="nav-sub">Lodge No. 608 · Irish Constitution</div>
     </div>
   </div>
-  <ul class="nav-links" id="main-nav">
-    <li><a href="#philosophy">Philosophy</a></li>
-    <li><a href="#meetings">Meetings</a></li>
-    <li><a href="#heritage">Heritage</a></li>
-    <li><a href="#charity">Charity</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="members.html" class="members-link">Members</a></li>
+  <ul class="nav-links" id="nav-public">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#philosophy">Philosophy</a></li>
+    <li><a href="index.html#meetings">Meetings</a></li>
+    <li><a href="index.html#heritage">Heritage</a></li>
+    <li><a href="index.html#charity">Charity</a></li>
+    <li><a href="members.html" class="active">Members</a></li>
   </ul>
-  <button class="mobile-toggle" onclick="document.getElementById('main-nav').classList.toggle('show')">&#9776;</button>
+  <div class="nav-member-panel" id="nav-member-panel">
+    <a href="index.html" style="color:var(--gold-dim); text-decoration:none; font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; transition:color 0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gold-dim)'">Home</a>
+    <span class="nav-member-name" id="nav-name"></span>
+    <button class="nav-logout" onclick="logout()">Sign Out</button>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="beam-wrap">
-    <div class="beam-glow"></div>
-    <div class="beam beam-1"></div>
-    <div class="beam beam-2"></div>
-  </div>
-  <img src="SC_Logo.png" alt="Lodge Emblem" class="hero-emblem">
-  <h1>Sharman Crawford Lodge</h1>
-  <div class="hero-lodge-num">No. 608</div>
-  <div class="hero-constitution">Provincial Grand Lodge of the Southern Cape · Irish Constitution</div>
-  <div class="hero-quote">
-    "In a world drowning in information, the real search is for meaning. We meet not to escape the noise — but to find what is worth hearing."
-    <cite>— Inspired by the spirit of our age</cite>
-  </div>
-</section>
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <img src="SC_Logo.png" alt="Lodge Emblem" class="auth-emblem">
+    <div class="auth-title">Members Area</div>
+    <div class="auth-subtitle">Sharman Crawford Lodge No. 608 · Irish Constitution</div>
 
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-dot"></div>
-  <div class="divider-line"></div>
+    <div class="step-track">
+      <div class="step-node active" id="sn1">1</div>
+      <div class="step-connector"></div>
+      <div class="step-node" id="sn2">2</div>
+      <div class="step-connector"></div>
+      <div class="step-node" id="sn3">&#10003;</div>
+    </div>
+    <div class="step-labels">
+      <div class="step-lbl active" id="sl1">Identity</div>
+      <div style="flex:1"></div>
+      <div class="step-lbl" id="sl2">Code</div>
+      <div style="flex:1"></div>
+      <div class="step-lbl" id="sl3">Enter</div>
+    </div>
+
+    <div class="auth-step visible" id="step1">
+      <div class="auth-error" id="err1">Brother not found, or PIN is incorrect. Please check your details and try again.</div>
+      <div class="field-label">Your Name</div>
+      <input type="text" class="auth-input" id="inp-name" placeholder="As registered — e.g. John Smith" autocomplete="name">
+      <div class="field-label">Your PIN</div>
+      <input type="password" class="auth-input" id="inp-pin" placeholder="Your personal PIN" maxlength="8" autocomplete="current-password">
+      <button class="auth-btn" onclick="submitStep1()">Continue</button>
+      <div class="auth-info">Your name and PIN were issued by the Webmaster. Contact the lodge Secretary if you have not received yours.</div>
+    </div>
+
+    <div class="auth-step" id="step2">
+      <div class="auth-error" id="err2">That code is incorrect. Please check the lodge WhatsApp group and try again.</div>
+      <div class="field-label">Monthly Lodge Code</div>
+      <input type="text" class="auth-input code-style" id="inp-code" placeholder="· · · · · ·" maxlength="8" autocomplete="off">
+      <button class="auth-btn" onclick="submitStep2()">Enter the Lodge</button>
+      <div class="auth-info">
+        The monthly code is posted to the lodge WhatsApp group by the Secretary at the start of each month.
+        <br><br>
+        <a onclick="goBackToStep1()">&larr; Back</a>
+      </div>
+    </div>
+
+    <div class="auth-divider">
+      <div class="auth-divider-line"></div>
+      <div class="auth-divider-diamond"></div>
+      <div class="auth-divider-line"></div>
+    </div>
+    <div class="auth-info" style="font-size:0.63rem; opacity:0.5;">
+      Restricted to members of Sharman Crawford Lodge No. 608 only.<br>
+      All access is logged by session.
+    </div>
+  </div>
 </div>
 
-<!-- PHILOSOPHY -->
-<section id="philosophy">
-  <div class="section-label reveal">Why Freemasonry Now</div>
-  <div class="section-heading reveal">In an age of algorithms, we choose authenticity</div>
-  <div class="section-body reveal">
-    <p>Yuval Noah Harari reminds us that we live in a time when information is everywhere — yet wisdom feels harder to find than ever. Our feeds are curated, our connections filtered, our conversations mediated by screens. Something ancient in us still searches for what is real.</p>
-    <p>Freemasonry is not an escape from the modern world. It is an anchor within it. A place where men of different backgrounds, beliefs, and walks of life sit together — not behind avatars, but face to face — and engage with questions that matter. Who are we? What do we owe each other? How should we live?</p>
-    <p>These are not new questions. They are the oldest ones. And they deserve better than a scroll and a swipe.</p>
+<!-- MEMBERS AREA -->
+<div id="members-area">
+  <div class="members-header">
+    <div class="welcome-label">Welcome, Brother</div>
+    <div class="welcome-name" id="display-name">—</div>
+    <div class="degree-badge" id="display-degrees">—</div>
   </div>
 
-  <div class="philosophy-grid">
-    <div class="phil-card reveal">
-      <span class="phil-card-icon">&#9878;</span>
-      <h3>Brotherly Love</h3>
-      <p>Not a slogan but a practice. We meet on the level — every brother equal, regardless of title, income, or background. Real connection, forged through shared experience.</p>
-    </div>
-    <div class="phil-card reveal">
-      <span class="phil-card-icon">&#9883;</span>
-      <h3>Relief</h3>
-      <p>Charity is not a checkbox. It is the impulse to see a need and move towards it — in our lodge, our community, and beyond. We act because it is right, not because it is seen.</p>
-    </div>
-    <div class="phil-card reveal">
-      <span class="phil-card-icon">&#10023;</span>
-      <h3>Truth</h3>
-      <p>In a world of curated personas, we value honesty. Freemasonry asks you to look inward before you look outward — to build yourself before you build anything else.</p>
+  <div class="notice-wrap">
+    <div class="notice-bar">
+      <span class="notice-icon">&#9830;</span>
+      <span>
+        <span class="notice-heading">Next Regular Communication</span>
+        Second Thursday of the month · Lodge de Goede Hoop, Bouquet Street, Cape Town · Summons available in your section below.
+      </span>
     </div>
   </div>
-</section>
 
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-dot"></div>
-  <div class="divider-line"></div>
+  <div class="tab-bar">
+    <div class="deg-tab ea" id="tab-ea" onclick="showPanel('ea')">
+      <span class="deg-tab-num">&#9670;</span>
+      <span class="deg-tab-code">First Degree</span>
+      <span class="deg-tab-name">Entered Apprentice</span>
+    </div>
+    <div class="deg-tab fc" id="tab-fc" onclick="showPanel('fc')">
+      <span class="deg-tab-num">&#9670;</span>
+      <span class="deg-tab-code">Second Degree</span>
+      <span class="deg-tab-name">Fellow Craft</span>
+    </div>
+    <div class="deg-tab mm" id="tab-mm" onclick="showPanel('mm')">
+      <span class="deg-tab-num">&#9670;</span>
+      <span class="deg-tab-code">Third Degree</span>
+      <span class="deg-tab-name">Master Mason</span>
+    </div>
+  </div>
+
+  <!-- EA PANEL -->
+  <div class="deg-panel" id="panel-ea">
+    <div class="panel-eyebrow ea">First Degree · Entered Apprentice</div>
+    <div class="panel-title">The First Step</div>
+    <div class="panel-quote">"By square conduct, level steps, and upright intentions."</div>
+    <div class="content-grid">
+      <div class="c-card ea">
+        <span class="c-icon ea">&#9710;</span>
+        <div class="c-title ea">Summons</div>
+        <div class="c-desc">Official summons and notices for Entered Apprentice members.</div>
+        <ul class="doc-list ea" id="docs-ea-summons"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card ea">
+        <span class="c-icon ea">&#9780;</span>
+        <div class="c-title ea">First Degree Resources</div>
+        <div class="c-desc">Study materials and guidance for the Entered Apprentice.</div>
+        <ul class="doc-list ea" id="docs-ea-resources"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card ea">
+        <span class="c-icon ea">&#9883;</span>
+        <div class="c-title ea">Lodge Information</div>
+        <div class="c-desc">General lodge information and notices for all members.</div>
+        <ul class="doc-list ea" id="docs-ea-general"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FC PANEL -->
+  <div class="deg-panel" id="panel-fc">
+    <div class="panel-eyebrow fc">Second Degree · Fellow Craft</div>
+    <div class="panel-title">The Middle Chamber</div>
+    <div class="panel-quote">"The application of knowledge to practice is the perfection of art."</div>
+    <div class="content-grid">
+      <div class="c-card fc">
+        <span class="c-icon fc">&#9710;</span>
+        <div class="c-title fc">Summons</div>
+        <div class="c-desc">Summons and notices for the Second Degree.</div>
+        <ul class="doc-list fc" id="docs-fc-summons"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card fc">
+        <span class="c-icon fc">&#9741;</span>
+        <div class="c-title fc">Minutes of Meetings</div>
+        <div class="c-desc">Approved minutes from regular communications.</div>
+        <ul class="doc-list fc" id="docs-fc-minutes"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card fc">
+        <span class="c-icon fc">&#9780;</span>
+        <div class="c-title fc">Second Degree Resources</div>
+        <div class="c-desc">Study materials and working documents for Fellows of the Craft.</div>
+        <ul class="doc-list fc" id="docs-fc-resources"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MM PANEL -->
+  <div class="deg-panel" id="panel-mm">
+    <div class="panel-eyebrow mm">Third Degree · Master Mason</div>
+    <div class="panel-title">The Sanctum Sanctorum</div>
+    <div class="panel-quote">"From darkness to light — from death to resurrection — from the lost to the restored."</div>
+    <div class="content-grid">
+      <div class="c-card mm">
+        <span class="c-icon mm">&#9710;</span>
+        <div class="c-title mm">Summons and Business</div>
+        <div class="c-desc">Full summons including all lodge business for Master Masons.</div>
+        <ul class="doc-list mm" id="docs-mm-summons"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card mm">
+        <span class="c-icon mm">&#9741;</span>
+        <div class="c-title mm">Minutes and Financials</div>
+        <div class="c-desc">Full lodge minutes and financial reporting.</div>
+        <ul class="doc-list mm" id="docs-mm-minutes"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card mm">
+        <span class="c-icon mm">&#9878;</span>
+        <div class="c-title mm">Ceremonial and Ritual</div>
+        <div class="c-desc">Officer duties, ceremonial working, and lodge protocols.</div>
+        <ul class="doc-list mm" id="docs-mm-ceremonial"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card mm">
+        <span class="c-icon mm">&#10023;</span>
+        <div class="c-title mm">Centenary 1927–2027</div>
+        <div class="c-desc">Planning and correspondence for the lodge centenary.</div>
+        <ul class="doc-list mm" id="docs-mm-centenary"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card mm">
+        <span class="c-icon mm">&#9780;</span>
+        <div class="c-title mm">Governance Documents</div>
+        <div class="c-desc">Full bylaws, Irish Constitution, and standing orders.</div>
+        <ul class="doc-list mm" id="docs-mm-governance"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card mm">
+        <span class="c-icon mm">&#9883;</span>
+        <div class="c-title mm">SCARF — Full Reports</div>
+        <div class="c-desc">Complete charity reporting and planning for Master Masons.</div>
+        <ul class="doc-list mm" id="docs-mm-scarf"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-masonic">Brotherly Love · Relief · Truth</div>
+    <div class="footer-copy">&copy; 2025 Sharman Crawford Lodge No. 608 · Cape Town, South Africa · Members Area</div>
+  </footer>
 </div>
 
-<!-- MEETINGS -->
-<section id="meetings">
-  <div class="section-label reveal">When We Meet</div>
-  <div class="section-heading reveal">Lodge de Goede Hoop, Cape Town</div>
-  <div class="section-body reveal">
-    <p>We gather on the second Thursday of each month, except January. Our meetings are held at the historic masonic centre de Goede Hoop — one of the most beautiful Masonic venues in the Southern Hemisphere — where the traditions of centuries meet the conversations of today.</p>
-  </div>
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  CONFIGURATION — Webmaster edits these two values only
+//
+//  ENCRYPTION_KEY: your chosen secret key — must match what you
+//  typed into the SC608_Encoder.html tool when generating the payload.
+//
+//  ENCRYPTED_PAYLOAD: the string produced by SC608_Encoder.html.
+//  Run the encoder tool, fill in the members and monthly code,
+//  copy the output, and paste it between the quotes below.
+//  Do this each month when the monthly code changes, and whenever
+//  a member is added, removed, or their access changes.
+// ═══════════════════════════════════════════════════════════════════
 
-  <div class="meeting-card reveal">
-    <div class="meeting-when">Second Thursday of Each Month</div>
-    <div class="meeting-where">Lodge de Goede Hoop · Cape Town</div>
-    <div class="meeting-venue">"The Good Hope" — where the ancient and the modern converge</div>
-    <div class="meeting-note">No meetings in January</div>
-  </div>
+const ENCRYPTION_KEY     = 'SCL608-IrishConstitution-1927';
+const ENCRYPTED_PAYLOAD  = 'G9WgeWt0rVtUCpci/vkCOKElg0MQ66gM76rmTTylhmDFHOJQgtQgeosiGO8OohZBSM+MPkU3WmDaozGY+G+XC/c9pI1QxL5VJgJdJa+gL64EHL/Ncnn8FNygbNrg1/JGRJGmBnC56u+3PplOcWRuRmzAjtU5pr7mEXCTcfyEdA9c4x/bgpGxpDqwsb40fJxmE6RBPPIEBhd/hW3HE2E+ntvFk0BI7Zyfy8W9I/7J8fBgmi3EzKMZCRFN9lSPVJRjfseJF4gdn8q57TDUMfZ6T8dGGYS+oHE=';
 
-  <div class="centenary-banner reveal">
-    <div class="centenary-year">1927 — 2027</div>
-    <div class="centenary-text">Sharman Crawford Lodge was consecrated on 16 May 1927. In 2027 we mark our centenary — one hundred years of brotherhood, charity, and truth in Cape Town.</div>
-    <div class="centenary-date">Centenary celebrations coming 2027</div>
-  </div>
-</section>
+// ═══════════════════════════════════════════════════════════════════
+//  DOCUMENTS — fetched live from a public Google Sheet CSV.
+//
+//  GOOGLE SHEET SETUP (one time):
+//  1. Create a new Google Sheet.
+//  2. Row 1 headers: Title | Section | Link
+//  3. Add one document per row. Section values:
+//       ea-summons, ea-resources, ea-general
+//       fc-summons, fc-minutes, fc-resources
+//       mm-summons, mm-minutes, mm-ceremonial
+//       mm-centenary, mm-governance, mm-scarf
+//  4. Link: Google Drive shareable link (Anyone with the link)
+//  5. Publish as CSV: File > Share > Publish to web > CSV > Publish
+//  6. Paste the CSV URL below as DOCUMENTS_SHEET_URL
+//
+//  To add a document: add a row to the Sheet. Done. No HTML changes.
+// ═══════════════════════════════════════════════════════════════════
 
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-dot"></div>
-  <div class="divider-line"></div>
-</div>
+const DOCUMENTS_SHEET_URL = 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE';
 
-<!-- HERITAGE -->
-<section id="heritage">
-  <div class="section-label reveal">Our Heritage</div>
-  <div class="section-heading reveal">A lodge that chose the right side of history</div>
-  <div class="section-body reveal">
-    <p>Masonic Centre de Goede Hoop, Bouquet Street, Cape Town — consecrated in 1803 and today a national monument. One of the most beautiful Masonic centres in the world — and during the darkest years of Apartheid, the only place in South Africa where men of all races were permitted to meet as equals. History is embedded in every wall.</p>
-  </div>
+// Static documents — add links here directly if not using the Sheet
+const STATIC_DOCUMENTS = [
+  { title: 'Opening Lodge', section: 'ea-resources', link: 'https://sharmancrawfordlodge.org.za/sharman_crawford_lodge_opening.html' },
+  { title: 'Closing Lodge', section: 'ea-resources', link: 'https://sharmancrawfordlodge.org.za/sharman_crawford_lodge_closing.html' },
+];
 
-  <div class="meeting-card reveal" style="border-color: rgba(42, 122, 74, 0.3);">
-    <div class="hero-quote" style="max-width:100%; font-size:1.15rem;">
-      "During Apartheid in South Africa, there was only one organisation permitted to fraternise across the colour line — and that organisation was Freemasonry."
-      <cite style="display:block; margin-top:0.8rem; font-size:0.8rem; font-style:normal; letter-spacing:0.1em; color:var(--gold-dim);">— Lodge de Goede Hoop, Cape Town</cite>
-    </div>
-  </div>
+const CARD_MAP = {
+  'ea-summons':    'docs-ea-summons',
+  'ea-resources':  'docs-ea-resources',
+  'ea-general':    'docs-ea-general',
+  'fc-summons':    'docs-fc-summons',
+  'fc-minutes':    'docs-fc-minutes',
+  'fc-resources':  'docs-fc-resources',
+  'mm-summons':    'docs-mm-summons',
+  'mm-minutes':    'docs-mm-minutes',
+  'mm-ceremonial': 'docs-mm-ceremonial',
+  'mm-centenary':  'docs-mm-centenary',
+  'mm-governance': 'docs-mm-governance',
+  'mm-scarf':      'docs-mm-scarf',
+};
 
-  <div class="section-body reveal" style="margin-top: 2.5rem;">
-    <p>At a time when an entire nation was organised around the separation of people by race, the Masonic Centre de Goede Hoop — the very Masonic Centre where we meet today — was the only place in South Africa where men of all racial backgrounds could sit together as equals. This was not a quiet accommodation. It was a deliberate, principled stand.</p>
-    <p>The Grand Lodge of South Africa, led by the courage of men like R.W. Brother Morris Levin, formally negotiated the right to admit men of colour as full members, with some rising to the highest offices within the Grand Lodge — at a time when such equality was illegal almost everywhere else in the country.</p>
-    <p>When we walk through the doors of de Goede Hoop Masonic Centre today, we walk into a building that chose the right side of history, quietly, before it was popular or safe to do so. That is a legacy worth knowing. And worth continuing.</p>
-  </div>
+// ═══════════════════════════════════════════════════════════════════
 
-  <div class="section-body reveal" style="margin-top: 2.5rem;">
-    <p><em>Sharman Crawford Lodge No. 608 operates under the Provincial Grand Lodge of the Southern Cape, within the oldest and most democratic of the great Masonic constitutions — the Grand Lodge of Ireland. The Irish Constitution is known for its warmth, its inclusivity, and its enduring commitment to the universality of Masonic brotherhood.</em></p>
-    <p><em>We are named for William Sharman Crawford — Irish reformer, champion of tenant rights, and a man of principle ahead of his time. His values of fairness, dignity, and courage for the right course shape our lodge culture to this day.</em></p>
-  </div>
-</section>
+let memberList    = [];
+let monthlyCode   = '';
+let currentMember = null;
+let loadedDocs    = [];
 
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-dot"></div>
-  <div class="divider-line"></div>
-</div>
+(async function boot() {
+  await loadDocuments();
 
-<!-- CHARITY -->
-<section id="charity">
-  <div class="section-label reveal">Our Charity Work</div>
-  <div class="section-heading reveal">Giving back, one stitch at a time</div>
-  <div class="section-body reveal">
-    <p>Freemasonry has always placed charity at its heart. At Sharman Crawford Lodge, we put that principle into practice through SCARF — the Sharman Crawford Aid &amp; Relief Fund.</p>
-  </div>
+  if (ENCRYPTED_PAYLOAD !== 'PASTE_ENCRYPTED_PAYLOAD_HERE') {
+    try {
+      const decrypted = await decryptPayload(ENCRYPTED_PAYLOAD, ENCRYPTION_KEY);
+      const data      = JSON.parse(decrypted);
+      memberList  = data.members     || [];
+      monthlyCode = data.monthlyCode || '';
+    } catch(e) {
+      console.error('Failed to decrypt member data. Check your ENCRYPTION_KEY matches the encoder.', e);
+    }
+  }
 
-  <div class="charity-card reveal">
-    <img src="SCARF.png" alt="SCARF Logo" class="charity-logo">
-    <div class="charity-info">
-      <h3>SCARF — Scarfs for Good</h3>
-      <p>Knitted and sewn by residents of local retirement homes — many of whom are still sharp as a tack and chuffed to have a purpose — and by community volunteers who give their Sunday afternoons to the cause. Every scarf carries warmth in more ways than one.</p>
-      <p style="margin-top: 1rem;">Visit <a href="https://www.scarfsforgood.co.za" target="_blank">scarfsforgood.co.za</a> to learn more or support the initiative.</p>
-    </div>
-  </div>
-</section>
+  document.getElementById('inp-name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('inp-pin').focus(); });
+  document.getElementById('inp-pin').addEventListener('keydown',  e => { if (e.key === 'Enter') submitStep1(); });
+  document.getElementById('inp-code').addEventListener('keydown', e => { if (e.key === 'Enter') submitStep2(); });
 
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-dot"></div>
-  <div class="divider-line"></div>
-</div>
+  const saved = sessionStorage.getItem('sc608_member');
+  if (saved) {
+    try { currentMember = JSON.parse(saved); showMembersArea(); return; }
+    catch(e) { sessionStorage.removeItem('sc608_member'); }
+  }
+})();
 
-<!-- CONTACT -->
-<section id="contact">
-  <div class="section-label reveal">Reach Out</div>
-  <div class="section-heading reveal">Curious? Good. That is where it begins.</div>
-  <div class="section-body reveal">
-    <p>Freemasonry does not recruit. We welcome men of good character who come of their own free will. If something here resonates — if you are searching for something more real than what the algorithm offers — we would be glad to hear from you. (If you really wanna know about the goat there is only one way to find out :-) )</p>
-  </div>
+// ─── AES-GCM Decryption ───────────────────────────────────────────
+async function decryptPayload(b64, password) {
+  const buf     = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const salt    = buf.slice(0, 16);
+  const iv      = buf.slice(16, 28);
+  const data    = buf.slice(28);
+  const enc     = new TextEncoder();
+  const keyMat  = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  const aesKey  = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+    keyMat,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['decrypt']
+  );
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, aesKey, data);
+  return new TextDecoder().decode(plain);
+}
 
-  <div class="contact-grid reveal">
-    <div class="contact-item">
-      <div class="contact-item-label">Email</div>
-      <div class="contact-item-value"><a href="/cdn-cgi/l/email-protection#20494e464f60534841524d414e43524157464f52440e434f0e5a41"><span class="__cf_email__" data-cfemail="9ff6f1f9f0dfecf7feedf2fef1fcedfee8f9f0edfbb1fcf0b1e5fe">[email&#160;protected]</span></a></div>
-    </div>
-    <div class="contact-item">
-      <div class="contact-item-label">Constitution</div>
-      <div class="contact-item-value"><a href="https://freemason.ie/" target="_blank">Grand Lodge of Ireland</a></div>
-    </div>
-    <div class="contact-item">
-      <div class="contact-item-label">Province</div>
-      <div class="contact-item-value"><a href="https://www.ipglsc.org.za/" target="_blank">Provincial Grand Lodge of the Southern Cape</a></div>
-    </div>
-  </div>
-</section>
+// ─── Documents — fetched from public Google Sheet CSV ────────────
+async function loadDocuments() {
+  let docs = [...STATIC_DOCUMENTS];
+  if (DOCUMENTS_SHEET_URL !== 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE') {
+    try {
+      const res  = await fetch(DOCUMENTS_SHEET_URL);
+      const text = await res.text();
+      const rows = text.trim().split('\n').slice(1);
+      const sheetDocs = rows.map(row => {
+        const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+        return { title: cols[0], section: cols[1], link: cols[2] };
+      }).filter(d => d.title && d.section && d.link);
+      docs = [...docs, ...sheetDocs];
+    } catch(err) {
+      console.warn('Could not load documents sheet:', err);
+    }
+  }
+  loadedDocs = docs;
+  renderDocuments(docs);
+}
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-masonic">Brotherly Love · Relief · Truth</div>
-  <div class="footer-copy">&copy; 2025 Sharman Crawford Lodge No. 608 · Cape Town, South Africa</div>
-</footer>
+function renderDocuments(docs) {
+  Object.values(CARD_MAP).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
+  docs.forEach(doc => {
+    const listId = CARD_MAP[doc.section];
+    if (!listId) return;
+    const ul = document.getElementById(listId);
+    if (!ul) return;
+    const li = document.createElement('li');
+    const a  = document.createElement('a');
+    a.href   = doc.link;
+    a.target = '_blank';
+    a.rel    = 'noopener noreferrer';
+    a.textContent = doc.title;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+}
 
-<!-- SCROLL REVEAL -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer  = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => {
-          e.target.style.opacity   = '1';
-          e.target.style.transform = 'translateY(0)';
-        }, i * 80);
-        observer.unobserve(e.target);
-      }
-    });
+// ─── Step 1 ───────────────────────────────────────────────────────
+function submitStep1() {
+  const name = document.getElementById('inp-name').value.trim().toLowerCase();
+  const pin  = document.getElementById('inp-pin').value.trim();
+  const err  = document.getElementById('err1');
+  err.style.display = 'none';
+  if (!name || !pin) return;
+  const found = memberList.find(m => m.name === name && m.pin === pin);
+  if (!found) {
+    err.style.display = 'block';
+    document.getElementById('inp-pin').value = '';
+    document.getElementById('inp-pin').focus();
+    return;
+  }
+  currentMember = found;
+  document.getElementById('sn1').classList.replace('active','done');
+  document.getElementById('sn2').classList.add('active');
+  document.getElementById('sl1').classList.remove('active');
+  document.getElementById('sl2').classList.add('active');
+  document.getElementById('step1').classList.remove('visible');
+  document.getElementById('step2').classList.add('visible');
+  setTimeout(() => document.getElementById('inp-code').focus(), 80);
+}
+
+// ─── Step 2 ───────────────────────────────────────────────────────
+function submitStep2() {
+  const entered = document.getElementById('inp-code').value.trim().toUpperCase();
+  const err     = document.getElementById('err2');
+  err.style.display = 'none';
+  if (!entered) return;
+  if (entered !== monthlyCode.toUpperCase()) {
+    err.style.display = 'block';
+    document.getElementById('inp-code').value = '';
+    document.getElementById('inp-code').focus();
+    return;
+  }
+  document.getElementById('sn2').classList.replace('active','done');
+  document.getElementById('sn3').classList.add('active');
+  document.getElementById('sl2').classList.remove('active');
+  document.getElementById('sl3').classList.add('active');
+  sessionStorage.setItem('sc608_member', JSON.stringify(currentMember));
+  setTimeout(showMembersArea, 350);
+}
+
+function goBackToStep1() {
+  document.getElementById('step2').classList.remove('visible');
+  document.getElementById('step1').classList.add('visible');
+  document.getElementById('sn2').classList.remove('active');
+  document.getElementById('sn1').classList.remove('done');
+  document.getElementById('sn1').classList.add('active');
+  document.getElementById('sl2').classList.remove('active');
+  document.getElementById('sl1').classList.add('active');
+  document.getElementById('err2').style.display = 'none';
+  document.getElementById('inp-code').value = '';
+  currentMember = null;
+}
+
+// ─── Show members ─────────────────────────────────────────────────
+function showMembersArea() {
+  document.getElementById('auth-screen').style.display = 'none';
+  const area = document.getElementById('members-area');
+  area.style.display = 'block';
+  renderDocuments(loadedDocs);
+
+  const pretty = currentMember.name.replace(/\b\w/g, c => c.toUpperCase());
+  document.getElementById('display-name').textContent = 'Bro. ' + pretty;
+  document.getElementById('nav-name').textContent     = pretty;
+
+  const degs = [];
+  if (currentMember.ea) degs.push('E.A.');
+  if (currentMember.fc) degs.push('F.C.');
+  if (currentMember.mm) degs.push('M.M.');
+  document.getElementById('display-degrees').textContent = degs.join(' · ') || 'Visitor';
+
+  document.getElementById('nav-public').style.display       = 'none';
+  document.getElementById('nav-member-panel').style.display = 'flex';
+
+  ['ea','fc','mm'].forEach(deg => {
+    if (!currentMember[deg]) {
+      const tab = document.getElementById('tab-' + deg);
+      tab.classList.add('locked');
+      tab.onclick = null;
+    }
+  });
+
+  if      (currentMember.mm) showPanel('mm');
+  else if (currentMember.fc) showPanel('fc');
+  else if (currentMember.ea) showPanel('ea');
+}
+
+function showPanel(deg) {
+  if (currentMember && !currentMember[deg]) return;
+  ['ea','fc','mm'].forEach(d => {
+    document.getElementById('panel-' + d).classList.remove('visible');
+    document.getElementById('tab-'   + d).classList.remove('active');
+  });
+  document.getElementById('panel-' + deg).classList.add('visible');
+  document.getElementById('tab-'   + deg).classList.add('active');
+}
+
+function logout() {
+  sessionStorage.removeItem('sc608_member');
+  currentMember = null;
+  document.getElementById('members-area').style.display       = 'none';
+  document.getElementById('auth-screen').style.display        = 'flex';
+  document.getElementById('nav-public').style.display         = 'flex';
+  document.getElementById('nav-member-panel').style.display   = 'none';
+  ['ea','fc','mm'].forEach(d => {
+    const t = document.getElementById('tab-' + d);
+    t.classList.remove('locked','active');
+    t.onclick = () => showPanel(d);
+  });
+  ['inp-name','inp-pin','inp-code'].forEach(id => document.getElementById(id).value = '');
+  goBackToStep1();
+}
+</script>
+</body>
+</html>
