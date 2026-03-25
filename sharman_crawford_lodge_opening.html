@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sharman Crawford Lodge No. 608 — Opening of the Lodge</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #1a1410;
+    color: #e8d5a0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 16px;
+    padding: 16px 24px;
+    border: 1px solid #a07828;
+    border-radius: 4px;
+    background: #221a0e;
+    max-width: 680px;
+    width: 100%;
+  }
+  header h1 {
+    font-size: 18px;
+    color: #f0c040;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  header p {
+    font-size: 12px;
+    color: #a08040;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  #main {
+    background: #221a0e;
+    border: 1px solid #a07828;
+    border-radius: 4px;
+    padding: 12px;
+    max-width: 680px;
+    width: 100%;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    border: 1px solid #3a2e18;
+    border-radius: 2px;
+  }
+  #info-box {
+    font-size: 13px;
+    color: #d4b870;
+    min-height: 54px;
+    margin: 10px 0 8px;
+    text-align: center;
+    line-height: 1.6;
+    padding: 8px 12px;
+    background: #1a1410;
+    border: 1px solid #3a2e18;
+    border-radius: 2px;
+    font-family: Georgia, serif;
+  }
+  #step-title {
+    font-size: 11px;
+    color: #a07828;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  #controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  button {
+    background: #2e2210;
+    color: #f0c040;
+    border: 1px solid #a07828;
+    padding: 7px 18px;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  button:hover { background: #3d2e14; }
+  button:active { background: #4a3a1a; }
+  #step-lbl {
+    font-size: 11px;
+    color: #8a6820;
+    font-family: Georgia, serif;
+    min-width: 60px;
+    text-align: center;
+  }
+  #progress {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    padding: 0 4px;
+  }
+  .pip {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #3a2e18;
+    border: 1px solid #5a4820;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .pip.active { background: #f0c040; border-color: #f0c040; }
+  .pip.done { background: #a07828; border-color: #a07828; }
+  footer {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 11px;
+    color: #5a4820;
+    letter-spacing: 1px;
+    max-width: 680px;
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Sharman Crawford Lodge No. 608</h1>
+  <p>Irish Constitution &nbsp;&bull;&nbsp; Opening of the Craft Lodge &nbsp;&bull;&nbsp; Training Tool</p>
+</header>
+
+<div id="main">
+  <canvas id="cv" width="640" height="500"></canvas>
+  <div id="step-title">Step 1 of 21</div>
+  <div id="info-box">Press Play or use the arrows to begin the opening ceremony.</div>
+  <div id="controls">
+    <button onclick="prev()">&#8592; Prev</button>
+    <button onclick="next()">Next &#8594;</button>
+    <button id="speech-btn" onclick="toggleSpeech()">Voice On</button>
+    <span id="step-lbl">1 / 21</span>
+  </div>
+  <div id="progress"></div>
+</div>
+
+<footer>
+  Sharman Crawford Lodge No. 608 &nbsp;&bull;&nbsp; Irish Constitution &nbsp;&bull;&nbsp; Cape Town &nbsp;&bull;&nbsp; Based on the Provincial Working
+</footer>
+
+<script>
+const cv = document.getElementById('cv');
+const cx = cv.getContext('2d');
+const W = 640, H = 500;
+
+const R   = {x:70, y:10, w:480, h:450};
+const CHQ = {x:108, y:78, w:360, h:332};
+const CHQ_CX = CHQ.x + CHQ.w/2;
+const CHQ_CY = CHQ.y + CHQ.h/2;
+const AW=76, AH=50;
+const ALT = {x:CHQ_CX-AW/2, y:CHQ_CY-AH/2, w:AW, h:AH};
+
+const FINAL = {
+  DC:   {x:280, y:38},
+  WM:   {x:258, y:38},
+  SD:   {x:140, y:38},
+  Chap: {x:510, y:160},
+  SC:   {x:140, y:108},
+  Alm:  {x:510, y:38},
+  Tres: {x:140, y:108},
+  Sect: {x:510, y:108},
+  JW:   {x:510, y:268},
+  SW:   {x:288, y:390},
+  JD:   {x:352, y:390},
+  IG:   {x:132, y:402},
+  Tyler:{x:255, y:472}
+};
+
+const LABELS = {DC:'D.C.',Chap:'Chap.',SC:'S.C.',Alm:'Alm.',Tres:'Tres.',Sect:'Sect.',JW:'J.W.',SW:'S.W.',JD:'J.D.',SD:'S.D.',WM:'W.M.',IG:'I.G.',Tyler:'Tyler'};
+const JEWELS = {DC:'dc',Chap:'+',SC:'sc',Alm:'al',Tres:'tr',Sect:'se',JW:'jw',SW:'sw',JD:'jd',SD:'sd',WM:'wm',IG:'ig',Tyler:'/'};
+const IS_PRINCIPAL = {WM:true, SW:true, JW:true};
+
+const ALL = ['DC','IG','Chap','SC','Alm','Tres','Sect','SW','JW','SD','JD','WM','Tyler'];
+
+function procFormation(){
+  const bx=320, by=510, gap=30;
+  return {
+    DC:  {x:bx,    y:by},
+    IG:  {x:bx,    y:by+gap},
+    Chap:{x:bx,    y:by+gap*2},
+    SC:  {x:bx-26, y:by+gap*3},
+    Alm: {x:bx+26, y:by+gap*3},
+    Tres:{x:bx-26, y:by+gap*4},
+    Sect:{x:bx+26, y:by+gap*4},
+    SW:  {x:bx-26, y:by+gap*5},
+    JW:  {x:bx+26, y:by+gap*5},
+    SD:  {x:bx-26, y:by+gap*6},
+    JD:  {x:bx+26, y:by+gap*6},
+    WM:  {x:bx,    y:by+gap*7},
+    Tyler:{x:255, y:472}
+  };
+}
+
+const FPOS = Object.fromEntries(ALL.map(k=>[k,{...FINAL[k]}]));
+
+
+const SPEECH = [
+  "The Volume of Sacred Law is opened at the scripture for the degree being worked. The three lesser lights are lit: Wisdom in the East near the Worshipful Master, Strength in the West near the Senior Warden, and Beauty in the South near the Junior Warden. The Warrant is placed at the Worshipful Master pedestal. The Tyler takes his post outside the door with a drawn sword.",
+  "The entry procession forms outside the open door, led by the Director of Ceremonies. Director of Ceremonies leads alone. Then the Inner Guard alone. Then the Chaplain alone. Then pairs side by side: Steward of Charities and Almoner. Treasurer and Secretary. Senior Warden and Junior Warden. Senior Deacon and Junior Deacon. The Worshipful Master is last.",
+  "The Director of Ceremonies gives one knock on the floor with his wand. The procession enters through the double doors. The Inner Guard remains at the door as the procession passes into the lodge room.",
+  "The procession moves East along the North side of the chequered floor. The Inner Guard remains at the door.",
+  "The Director of Ceremonies halts level with the Altar on the North side, facing South. All other officers halt to the West of the Director of Ceremonies without changing position and face inward.",
+  "The Deacons lead the Worshipful Master between the line of officers toward the East. They split in front of the Master Chair facing East and allow the Worshipful Master to pass between them and take the Chair.",
+  "The Worshipful Master takes the Chair and greets the Brethren. He commands: Let the Officers of the Lodge assume their places. The Wardens move between the lines and square the Lodge room. The Director of Ceremonies moves last after all offices are filled.",
+  "Worshipful Master: Be seated Brethren. Brother Inner Guard, close the door. The Worshipful Master satisfies himself that the door is closed and all officers are in position before proceeding.",
+  "The Worshipful Master gives one knock and commands: Rise Brethren, and assist me to open the Lodge. Worshipful Master: Brother Junior Warden, what is the first care of a Mason in opening a Lodge?",
+  "Junior Warden: To see the Lodge is tyled, Worshipful Master. Worshipful Master: See that duty performed. Junior Warden: Brother Inner Guard, see that the Lodge is tyled.",
+  "The Inner Guard knocks on the door with the knocks of the degree and waits until answered from without. He assures himself the Tyler is present. He shuts the door and reports to the Junior Warden, who then reports to the Worshipful Master.",
+  "Inner Guard: Brother Junior Warden, the Lodge is tyled. Junior Warden: Worshipful Master, the Lodge is tyled. Worshipful Master: Brother Senior Warden, what next demands our care?",
+  "Senior Warden: To see that each one present is in that Degree of Freemasonry on which the Lodge is about to be opened, proved by a Word and a Sign. Worshipful Master: How is that to be ascertained? Senior Warden: By giving a Word, and exhibiting a Sign.",
+  "Worshipful Master: Call the Deacons together, see that they are properly instructed, direct them to receive the Word from each one present, and report the same to me. Senior Warden: Let the Deacons approach.",
+  "The Senior Deacon carries his wand and moves along the South side of the Lodge, collecting the Word from each Brother present. The Junior Deacon moves along the North side from the Inner Guard position, collecting the Word from the Brethren on that side.",
+  "The Senior Deacon advances from the South side to the foot of the Worshipful Master dais. The Junior Deacon advances from the North side. Both Deacons give the Word to the Worshipful Master. Worshipful Master: Brethren, I have received the Word.",
+  
+  "Worshipful Master: Brother Junior Warden, direct the Brethren to stand to order in that Degree of Freemasonry on which the Lodge is about to be opened. Junior Warden: Brethren, it is the will and pleasure of the Worshipful Master that you stand to order in that Degree of Freemasonry on which the Lodge is about to be opened. All Brethren, including the Deacons, transfer wands to their left hands and stand to order.",
+  "Worshipful Master: Brother Inner Guard, where is your place in the Lodge? Inner Guard: Inside the Door of the Porch, Worshipful Master. Worshipful Master: What is your duty there? Inner Guard: To answer all regular knocks, to admit none but Brethren properly clothed and Candidates duly prepared, to announce the name of each visiting Brother, and to suffer none to enter or depart save at the will and pleasure of the Worshipful Master.",
+  "Worshipful Master: Brother Junior Deacon, where is your place in the Lodge? Junior Deacon: At the back of the Chair of the Senior Warden, or at his right hand if so permitted. Worshipful Master: What is your duty there? Junior Deacon: To carry all messages from the Senior Warden to the Junior Warden, and to distribute the same throughout the Lodge if so directed, Worshipful Master.",
+  "Worshipful Master: Brother Senior Deacon, where is your place in the Lodge? Senior Deacon: At the back of the Chair of the Worshipful Master, or at his right hand if so permitted. Worshipful Master: What is your duty there? Senior Deacon: To carry all messages from the Worshipful Master to the Senior Warden, and to distribute the same throughout the Lodge if so directed, Worshipful Master.",
+  "Worshipful Master: Brother Junior Warden, where is your place in the Lodge? Junior Warden: In the South, Worshipful Master. Worshipful Master: What is your duty there? Junior Warden: The better to observe the sun on the meridian, to call the Brethren from labour to refreshment and on again to labour, so that pleasure and profit may result therefrom.",
+  "Worshipful Master: Brother Senior Warden, where is your place in the Lodge? Senior Warden: In the West, Worshipful Master. Worshipful Master: What is your duty there? Senior Warden: As the sun sets in the West to close the glorious day, so the Senior Warden stands in the West to close the Lodge at the will and pleasure of the Worshipful Master.",
+  "Worshipful Master: Worshipful Brother Director of Ceremonies, where is the Master place in the Lodge? Director of Ceremonies: In the East, Worshipful Master. Worshipful Master: What is his duty there? Director of Ceremonies: As the sun rises in the East to open and illumine the glorious day, so the Worshipful Master presides in the East to open the Lodge, to rule and govern it with good and wholesome advice and instruction. Worshipful Master: It is so. I acknowledge my place and duty.",
+  "Worshipful Master: Let the Wardens declare to the Brethren that it is my will and pleasure that the Lodge do now open. Senior Warden: Brethren, it is the will and pleasure of the Worshipful Master that the Lodge do now open. Junior Warden: Brethren, it is the will and pleasure of the Worshipful Master that the Lodge do now open.",
+  "While the Wardens make their announcements, the officers assemble at the Altar. The Senior Deacon moves to the South side of the Altar. In South Africa, he steps forward from his chair, waits for the Junior Deacon to come around from behind the Senior Wardens Chair, and only then makes a smart left turn to pass East of the Altar to take up position at the South side. The Junior Deacon passes behind the Senior Wardens Chair along the North side of the Lodge room to take position on the North side of the Altar. Both Deacons time themselves to arrive at the same moment, make smart inward turns toward each other, and step in as close to the lesser lights as possible. The Director of Ceremonies leads the Chaplain to the West side of the Altar, facing the Worshipful Master in the East, with the Director of Ceremonies to the North of the Chaplain. The Worshipful Master must wait until all are in position before continuing.",
+  "Worshipful Master: Accordingly, Brethren, in the name of the Most High God, the Grand Architect of the Universe, I declare the Lodge to be now open, and at Labour on the First or Entered Apprentice Degree of Freemasonry, for the transaction of all such business as may be regularly brought before it, your Entrance Phrase being, By the [beep] of [beep] and the [beep] of [beep]. And this your True [beep] and [beep]. At the word open, the Deacons raise their wands to the coping position over the Three Great Lights. The Wardens reverse the positions of their pillars.",
+  "Director of Ceremonies: Brethren, adopt the Sign of Devotion for prayer. Chaplain: May the favour of Heaven be upon this meeting. And as it is happily begun, may it be conducted with order, and closed with harmony. Amen. All Brethren respond: So mote it be.",
+  "The knocks of the degree are given by the Worshipful Master, Senior Warden, Junior Warden and Inner Guard, and answered by the Tyler. Important note: when the Deacons hear the last knocks from the Tyler, they should immediately uncope their wands. Director of Ceremonies: Brethren, salute the Worshipful Master. All Brethren stand to order as Entered Apprentices and complete the salute when it is acknowledged by the Worshipful Master. Worshipful Master: Be seated Brethren.",
+  "The Deacons, Director of Ceremonies and Chaplain return to their places squaring the Lodge. The Secretary reads the notice convening the meeting. The Worshipful Master greets and salutes any visiting Grand Lodge or Provincial Grand Lodge Officers present. The Lodge is now open and at Labour on the Entered Apprentice Degree."
+];
+
+
+let speechEnabled = true;
+let speakQueue = [];
+let voiceA = null;
+let voiceB = null;
+
+function loadVoices() {
+  if (!window.speechSynthesis) return;
+  var voices = window.speechSynthesis.getVoices();
+  var FEMALE = ['zira','victoria','samantha','karen','moira','tessa','fiona','veena','susan','serena','linda','kate','lisa','emma','alice','sarah','anna','claire','hazel','emily','allison','ava','joanna','salli','kimberly','kendra','ivy','aria','jenny','michelle','elizabeth','amy','natasha','catherine','melissa','female','woman','girl','lady'];
+  var en = voices.filter(function(v){ return v.lang.startsWith('en'); });
+  if (en.length === 0) en = voices;
+  var male = en.filter(function(v){
+    var n = v.name.toLowerCase();
+    return !FEMALE.some(function(f){ return n.indexOf(f) !== -1; });
+  });
+  if (male.length === 0) male = en;
+  voiceA = male[0] || null;
+  voiceB = male.length > 1 ? male[1] : male[0];
+  console.log('Voices loaded — A:', voiceA ? voiceA.name : 'none', '| B:', voiceB ? voiceB.name : 'none');
+}
+
+var LABEL_MAP = {
+  'W.M.': 'Worshipful Master',
+  'S.W.': 'Senior Warden',
+  'J.W.': 'Junior Warden',
+  'S.D.': 'Senior Deacon',
+  'J.D.': 'Junior Deacon',
+  'I.G.': 'Inner Guard',
+  'D.C.': 'Director of Ceremonies',
+  'Chap.': 'Chaplain',
+  'Tyler': 'Tyler',
+  'All:': 'All Brethren respond',
+  'All Brethren respond:': 'All Brethren respond',
+  'Worshipful Master': 'Worshipful Master',
+  'Senior Warden': 'Senior Warden',
+  'Junior Warden': 'Junior Warden',
+  'Senior Deacon': 'Senior Deacon',
+  'Junior Deacon': 'Junior Deacon',
+  'Inner Guard': 'Inner Guard',
+  'Director of Ceremonies': 'Director of Ceremonies',
+  'Chaplain': 'Chaplain'
+};
+
+function expandLabel(t) {
+  t = t.replace(/:$/, '').trim();
+  return LABEL_MAP[t] || t;
+}
+
+function parseSegments(text) {
+  var segments = [];
+  var labelPattern = /([A-Z]\.[A-Z]\.|[A-Za-z][a-z]+(?: [A-Za-z][a-z]+)*|All Brethren respond|All|Tyler|Chaplain):\s*/g;
+  var match;
+  var lastIndex = 0;
+  var parts = [];
+  while ((match = labelPattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', content: text.substring(lastIndex, match.index) });
+    }
+    parts.push({ type: 'label', content: match[1] });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push({ type: 'text', content: text.substring(lastIndex) });
+  }
+  var i = 0;
+  while (i < parts.length) {
+    var p = parts[i];
+    if (p.type === 'label') {
+      segments.push({ text: expandLabel(p.content), voice: 'A' });
+      if (i + 1 < parts.length && parts[i+1].type === 'text') {
+        var spoken = parts[i+1].content.trim();
+        if (spoken) segments.push({ text: spoken, voice: 'B' });
+        i += 2;
+      } else {
+        i++;
+      }
+    } else {
+      var plain = p.content.trim();
+      if (plain) segments.push({ text: plain, voice: 'A' });
+      i++;
+    }
+  }
+  return segments;
+}
+
+function playBeep(onDone) {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.35);
+    osc.onended = function(){ ctx.close(); setTimeout(onDone, 80); };
+  } catch(e) { setTimeout(onDone, 300); }
+}
+
+function processQueue() {
+  if (speakQueue.length === 0) return;
+  var item = speakQueue.shift();
+  if (item.beep) {
+    playBeep(function(){ setTimeout(processQueue, 60); });
+    return;
+  }
+  if (!window.speechSynthesis) { speakQueue = []; return; }
+  try {
+    var u = new SpeechSynthesisUtterance(item.text);
+    if (item.voice === 'B') {
+      u.voice = voiceB;
+      u.rate  = 0.78;
+      u.pitch = 0.50;
+    } else {
+      u.voice = voiceA;
+      u.rate  = 0.88;
+      u.pitch = 0.85;
+    }
+    u.volume = 1.0;
+    u.onend   = function(){ setTimeout(processQueue, 180); };
+    u.onerror = function(){ setTimeout(processQueue, 180); };
+    window.speechSynthesis.speak(u);
+  } catch(e) { setTimeout(processQueue, 180); }
+}
+
+function speak(text) {
+  if (!speechEnabled) return;
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  speakQueue = [];
+  if (!voiceA) loadVoices();
+  var segs = parseSegments(text);
+  if (segs.length === 0) segs = [{ text: text, voice: 'A' }];
+  var expanded = [];
+  segs.forEach(function(seg) {
+    var parts = seg.text.split('[beep]');
+    parts.forEach(function(p, i) {
+      if (p.trim()) expanded.push({ text: p.trim(), voice: seg.voice });
+      if (i < parts.length - 1) expanded.push({ beep: true });
+    });
+  });
+  speakQueue = expanded.length > 0 ? expanded : segs;
+  setTimeout(processQueue, 150);
+}
+
+function toggleSpeech() {
+  speechEnabled = !speechEnabled;
+  document.getElementById('speech-btn').textContent = speechEnabled ? 'Voice On' : 'Voice Off';
+  if (!speechEnabled) {
+    try { window.speechSynthesis.cancel(); } catch(e) {}
+    speakQueue = [];
+  }
+}
+
+if (window.speechSynthesis) {
+  window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+  setTimeout(loadVoices, 500);
+}
+
+if (window.speechSynthesis) {
+  window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+  setTimeout(loadVoices, 500);
+}
+
+const STEPS = [
+  {title:'Preparation',desc:'The V.S.L. is opened at the scripture for the degree being worked. The lesser lights are lit: W (Wisdom) in the East near the W.M., S (Strength) in the West near the S.W., and B (Beauty) in the South near the J.W. The Warrant is placed at the W.M. pedestal. The Tyler takes his post outside the door with a drawn sword.',pos:{Tyler:{...FINAL.Tyler}},hl:null},
+  {title:'Procession forms outside',desc:'The entry procession forms outside the open door, led by the D.C. Order (page 22): D.C. alone — I.G. alone — Chaplain alone — then pairs: S.C./Alm. — Tres./Sect. — S.W./J.W. — S.D./J.D. — W.M. alone at the rear.',pos:procFormation(),hl:null},
+  {title:'Entering through the doors',desc:'The D.C. gives one knock on the floor with his wand. The procession enters through the double doors. The I.G. remains at the door as the procession passes into the lodge room.',pos:{DC:{x:124,y:442},IG:{...FINAL.IG},Chap:{x:124,y:414},SC:{x:114,y:392},Alm:{x:134,y:392},Tres:{x:114,y:370},Sect:{x:134,y:370},SW:{x:124,y:348},JW:{x:134,y:348},SD:{x:114,y:326},JD:{x:134,y:326},WM:{x:124,y:304},Tyler:{...FINAL.Tyler}},hl:'DC'},
+  {title:'Moving East along the North side',desc:'The procession moves East along the North side of the chequered floor. The I.G. remains at the door. The D.C. will halt level with the Altar on the North side. (page 23 note)',pos:{DC:{x:124,y:195},IG:{...FINAL.IG},Chap:{x:124,y:222},SC:{x:114,y:249},Alm:{x:134,y:249},Tres:{x:114,y:276},Sect:{x:134,y:276},SW:{x:124,y:303},JW:{x:134,y:303},SD:{x:114,y:330},JD:{x:134,y:330},WM:{x:124,y:357},Tyler:{...FINAL.Tyler}},hl:null},
+  {title:'Procession halts',desc:'The D.C. halts level with the Altar on the North side facing South. All other officers halt to the West of the D.C. without changing position and face inward. (page 23 note)',pos:{DC:{x:124,y:CHQ_CY},IG:{...FINAL.IG},Chap:{x:124,y:CHQ_CY+26},SC:{x:114,y:CHQ_CY+52},Alm:{x:134,y:CHQ_CY+52},Tres:{x:114,y:CHQ_CY+78},Sect:{x:134,y:CHQ_CY+78},SW:{x:130,y:CHQ_CY+104},JW:{x:140,y:CHQ_CY+104},SD:{x:114,y:CHQ_CY-26},JD:{x:134,y:CHQ_CY-26},WM:{x:124,y:CHQ_CY+130},Tyler:{...FINAL.Tyler}},hl:'DC'},
+  {title:'Deacons lead the WM to the East',desc:'The Deacons lead the W.M. between the line of officers toward the East. They split in front of the Master\'s Chair facing East and allow the W.M. to pass between them and take the Chair. (page 23)',pos:{DC:{x:124,y:CHQ_CY},IG:{...FINAL.IG},Chap:{x:124,y:CHQ_CY+26},SC:{x:114,y:CHQ_CY+52},Alm:{x:134,y:CHQ_CY+52},Tres:{x:114,y:CHQ_CY+78},Sect:{x:134,y:CHQ_CY+78},SW:{x:130,y:CHQ_CY+104},JW:{x:140,y:CHQ_CY+104},SD:{x:232,y:58},JD:{x:290,y:58},WM:{x:258,y:38},Tyler:{...FINAL.Tyler}},hl:'WM'},
+  {title:'Officers assume their places',desc:'The W.M. takes the Chair, greets the Brethren and commands: "Let the Officers of the Lodge assume their places." The Wardens square the Lodge room. The D.C. moves last after all offices are filled.',pos:FPOS,hl:'WM'},
+  {title:'Door is closed',desc:'W.M.: "Be seated Brethren. Brother Inner Guard, close the door." The W.M. satisfies himself that the door is closed and all officers are in position before proceeding.',pos:FPOS,hl:'IG'},
+  {title:'Rise to open the Lodge',desc:'W.M. gives one knock: "Rise Brethren, and assist me to open the Lodge." W.M.: "Brother Junior Warden, what is the first care of a Mason in opening a Lodge?"',pos:FPOS,hl:'JW'},
+  {title:'First care — tyling',desc:'J.W.: "To see the Lodge is tyled, Worshipful Master." — W.M.: "See that duty performed." — J.W.: "Brother Inner Guard, see that the Lodge is tyled."',pos:FPOS,hl:'IG'},
+  {title:'The Inner Guard confirms tyling',desc:'The I.G. knocks on the door with the knocks of the degree, waits until answered from without, assures himself the Tyler is present, shuts the door and reports to the J.W., who reports to the W.M.',pos:FPOS,hl:'Tyler'},
+  {title:'Next care — proving the Brethren',desc:'I.G. reports to J.W. who reports to the W.M. W.M.: "Brother Senior Warden, what next demands our care?"',pos:FPOS,hl:'SW'},
+  {title:'The SW answers — proving the Brethren',desc:'S.W.: "To see that each one present is in that Degree of Freemasonry on which the Lodge is about to be opened, proved by a Word and a Sign." W.M.: "How is that to be ascertained?" S.W.: "By giving a Word, and exhibiting a Sign."',pos:FPOS,hl:'SW'},
+  {title:'Deacons called to approach',desc:'W.M.: "Call the Deacons together, see that they are properly instructed, direct them to receive the Word from each one present, and report the same to me." S.W.: "Let the Deacons approach."',pos:FPOS,hl:'SD'},
+  {title:'Deacons collect the Word',desc:'The S.D. carries his wand and moves along the South side collecting the Word from each Brother. The J.D. moves along the North side from the Inner Guard position collecting the Word from each Brother on that side.',pos:{DC:{...FINAL.DC},WM:{...FINAL.WM},SD:{x:500,y:300},JD:{x:148,y:300},Chap:{...FINAL.Chap},SC:{...FINAL.SC},Alm:{...FINAL.Alm},Tres:{...FINAL.Tres},Sect:{...FINAL.Sect},SW:{...FINAL.SW},IG:{...FINAL.IG},Tyler:{...FINAL.Tyler}},hl:'SD'},
+  {title:'Deacons report to the WM',desc:'The S.D. advances from the South side to the foot of the W.M. dais. The J.D. advances from the North side. Both Deacons give the Word to the W.M. W.M.: "Brethren, I have received the Word."',pos:{DC:{...FINAL.DC},WM:{...FINAL.WM},SD:{x:295,y:75},JD:{x:222,y:75},Chap:{...FINAL.Chap},SC:{...FINAL.SC},Alm:{...FINAL.Alm},Tres:{...FINAL.Tres},Sect:{...FINAL.Sect},SW:{...FINAL.SW},IG:{...FINAL.IG},Tyler:{...FINAL.Tyler}},hl:'WM'},
+  {title:'Stand to order',desc:'W.M. directs the J.W. to have all Brethren stand to order. J.W.: "Brethren, it is the will and pleasure of the W.M. that you stand to order in that Degree on which the Lodge is about to be opened." All — including Deacons who transfer wands to their left hands — stand to order.',pos:FPOS,hl:'JW'},
+  {title:'W.M. questions the I.G.',desc:'W.M.: \"Brother Inner Guard, where is your place in the Lodge?\" I.G.: \"Inside the Door of the Porch, Worshipful Master.\" W.M.: \"What is your duty there?\" I.G.: \"To answer all regular knocks, to admit none but Brethren properly clothed and Candidates duly prepared, to announce the name of each visiting Brother, and to suffer none to enter or depart save at the will and pleasure of the Worshipful Master.\"',pos:FPOS,hl:'IG'},
+  {title:'W.M. questions the J.D.',desc:'W.M.: \"Brother Junior Deacon, where is your place in the Lodge?\" J.D.: \"At the back of the Chair of the Senior Warden, or at his right hand if so permitted.\" W.M.: \"What is your duty there?\" J.D.: \"To carry all messages from the Senior Warden to the Junior Warden, and to distribute the same throughout the Lodge if so directed, Worshipful Master.\"',pos:FPOS,hl:'JD'},
+  {title:'W.M. questions the S.D.',desc:'W.M.: \"Brother Senior Deacon, where is your place in the Lodge?\" S.D.: \"At the back of the Chair of the Worshipful Master, or at his right hand if so permitted.\" W.M.: \"What is your duty there?\" S.D.: \"To carry all messages from the Worshipful Master to the Senior Warden, and to distribute the same throughout the Lodge if so directed, Worshipful Master.\"',pos:FPOS,hl:'SD'},
+  {title:'W.M. questions the J.W.',desc:'W.M.: \"Brother Junior Warden, where is your place in the Lodge?\" J.W.: \"In the South, Worshipful Master.\" W.M.: \"What is your duty there?\" J.W.: \"The better to observe the sun on the meridian, to call the Brethren from labour to refreshment and on again to labour, so that pleasure and profit may result therefrom.\"',pos:FPOS,hl:'JW'},
+  {title:'W.M. questions the S.W.',desc:'W.M.: \"Brother Senior Warden, where is your place in the Lodge?\" S.W.: \"In the West, Worshipful Master.\" W.M.: \"What is your duty there?\" S.W.: \"As the sun sets in the West to close the glorious day, so the Senior Warden stands in the West to close the Lodge at the will and pleasure of the Worshipful Master.\"',pos:FPOS,hl:'SW'},
+  {title:'DC declares the WM\'s place and duty',desc:'W.M.: \"Worshipful Brother D.C., where is the Master\'s place in the Lodge?\" D.C.: \"In the East, Worshipful Master.\" W.M.: \"What is his duty there?\" D.C.: \"As the sun rises in the East to open and illumine the glorious day, so the W.M. presides in the East to open the Lodge, to rule and govern it with good and wholesome advice and instruction.\" W.M.: \"It is so. I acknowledge my place and duty.\"',pos:FPOS,hl:'DC'},
+  {title:'Wardens declare the Lodge open',desc:'W.M.: "Let the Wardens declare to the Brethren that it is my will and pleasure that the Lodge do now open." S.W. declares it. J.W. declares it. (The Wardens take sufficient time for the Deacons, D.C. and Chaplain to assemble at the Altar.)',pos:FPOS,hl:'SW'},
+  {title:'Deacons, D.C. and Chaplain assemble at the Altar',desc:'While the Wardens make their announcements: The S.D. moves to the South side of the Altar (in S.A. he steps forward and turns left to pass East of the Altar). The J.D. passes behind the S.W. Chair along the North side to the North of the Altar. Both Deacons time themselves to arrive simultaneously, make smart inward turns and step close to the lesser lights. The D.C. leads the Chaplain to the West side of the Altar facing the W.M. in the East, with the D.C. to the North of the Chaplain. The W.M. waits until all are in position.',pos:{DC:{x:255,y:296},WM:{...FINAL.WM},SD:{x:350,y:244},Chap:{x:288,y:296},SC:{...FINAL.SC},Alm:{...FINAL.Alm},Tres:{...FINAL.Tres},Sect:{...FINAL.Sect},JW:{...FINAL.JW},SW:{...FINAL.SW},JD:{x:225,y:244},IG:{...FINAL.IG},Tyler:{...FINAL.Tyler}},hl:'DC'},
+  {title:'WM opens the Lodge',desc:'W.M.: \"Accordingly, Brethren, in the name of the Most High God, the G.A.O.T.U., I declare the Lodge to be now open, and at Labour on the First or Entered Apprentice Degree of Freemasonry, for the transaction of all such business as may be regularly brought before it, your Entrance Phrase being, By the ....... of ....... and the ....... of ....... , And this your T....... G....... and S.......\" At the word OPEN the Deacons raise their wands to the coping position over the Three Great Lights. The Wardens reverse the positions of their pillars.',pos:{DC:{x:255,y:296},WM:{...FINAL.WM},SD:{x:350,y:244},Chap:{x:288,y:296},SC:{...FINAL.SC},Alm:{...FINAL.Alm},Tres:{...FINAL.Tres},Sect:{...FINAL.Sect},JW:{...FINAL.JW},SW:{...FINAL.SW},JD:{x:225,y:244},IG:{...FINAL.IG},Tyler:{...FINAL.Tyler}},hl:'WM',open:true},
+  {title:'Opening prayer',desc:'D.C.: "Brethren, adopt the Sign of Devotion for prayer." Chaplain: "May the favour of Heaven be upon this meeting; and as it is happily begun, may it be conducted with order, and closed with harmony." All: "So mote it be."',pos:{DC:{x:255,y:296},WM:{...FINAL.WM},SD:{x:350,y:244},Chap:{x:288,y:296},SC:{...FINAL.SC},Alm:{...FINAL.Alm},Tres:{...FINAL.Tres},Sect:{...FINAL.Sect},JW:{...FINAL.JW},SW:{...FINAL.SW},JD:{x:225,y:244},IG:{...FINAL.IG},Tyler:{...FINAL.Tyler}},hl:'Chap'},
+  {title:'Knocks and salute',desc:'The knocks of the degree are given by W.M., S.W., J.W. and I.G., and answered by the Tyler. Important: when the Deacons hear the last knocks from the Tyler, they must immediately uncope their wands. D.C.: "Brethren, salute the W.M." All stand to order as Entered Apprentices and complete the salute. W.M.: "Be seated Brethren."',pos:{DC:{x:255,y:296},WM:{...FINAL.WM},SD:{x:350,y:244},Chap:{x:288,y:296},SC:{...FINAL.SC},Alm:{...FINAL.Alm},Tres:{...FINAL.Tres},Sect:{...FINAL.Sect},JW:{...FINAL.JW},SW:{...FINAL.SW},JD:{x:225,y:244},IG:{...FINAL.IG},Tyler:{...FINAL.Tyler}},hl:null,open:true},
+  {title:'Lodge is open and at Labour',desc:'The Deacons, D.C. and Chaplain return to their places squaring the Lodge. The Secretary reads the notice convening the meeting. The W.M. greets and salutes any visiting Grand Lodge or Provincial Grand Lodge Officers present. The Lodge is now open and at Labour on the Entered Apprentice Degree.',pos:FPOS,hl:null,open:true},
+];
+
+let cur=0;
+let pos={};
+const pf=procFormation();
+ALL.forEach(k=>{ pos[k] = pf[k] ? {...pf[k]} : {...FINAL[k]}; });
+pos.Tyler = {x:40,y:448};
+
+function lerp(a,b,t){return a+(b-a)*t;}
+
+function drawFigure(key,p,hl,open){
+  if(!p) return;
+  const isPrincipal = IS_PRINCIPAL[key];
+  const isHL = hl===key;
+  const isOut = p.y > R.y+R.h+5;
+  cx.globalAlpha = isOut ? 0.45 : 1;
+
+  const headColor = isHL ? '#f0c040' : (isPrincipal ? '#4a9fd4' : '#c8a870');
+  const bodyColor = isHL ? '#c8860a' : (isPrincipal ? '#1a5a8a' : '#5a4820');
+
+  cx.beginPath(); cx.arc(p.x,p.y,8,0,Math.PI*2);
+  cx.fillStyle=headColor; cx.fill();
+  cx.strokeStyle=isHL?'#f0c040':'#3a2e18'; cx.lineWidth=1.5; cx.stroke();
+
+  cx.strokeStyle=bodyColor; cx.lineWidth=2;
+  cx.beginPath();
+  cx.moveTo(p.x,p.y+8); cx.lineTo(p.x,p.y+24);
+  cx.moveTo(p.x-9,p.y+14); cx.lineTo(p.x+9,p.y+14);
+  cx.moveTo(p.x,p.y+24); cx.lineTo(p.x-7,p.y+37);
+  cx.moveTo(p.x,p.y+24); cx.lineTo(p.x+7,p.y+37);
+  cx.stroke();
+
+  cx.fillStyle = isHL ? '#f0c040' : '#8a6820';
+  cx.font = 'bold 8px Georgia';
+  cx.textAlign = 'center';
+  cx.fillText(LABELS[key], p.x, p.y+49);
+
+  if(open && key==='WM'){
+    cx.fillStyle='#f0c040';
+    cx.font='bold 9px Georgia';
+    cx.fillText('LODGE OPEN',p.x,p.y-14);
+  }
+  cx.globalAlpha=1;
+}
+
+function drawRoom(){
+  cx.clearRect(0,0,W,H);
+  cx.fillStyle='#2a1f0e';
+  cx.fillRect(R.x,R.y,R.w,R.h);
+  cx.strokeStyle='#6a5020'; cx.lineWidth=2;
+  cx.strokeRect(R.x,R.y,R.w,R.h);
+
+  const sq=36;
+  for(let r=0;r<Math.ceil(CHQ.h/sq);r++){
+    for(let c=0;c<Math.ceil(CHQ.w/sq);c++){
+      const fw=Math.min(sq,CHQ.w-c*sq), fh=Math.min(sq,CHQ.h-r*sq);
+      if(fw>0&&fh>0){
+        cx.fillStyle=(r+c)%2===0?'#1a1410':'#d4c8a0';
+        cx.fillRect(CHQ.x+c*sq,CHQ.y+r*sq,fw,fh);
+      }
+    }
+  }
+  cx.strokeStyle='#5a4820'; cx.lineWidth=0.5;
+  cx.strokeRect(CHQ.x,CHQ.y,CHQ.w,CHQ.h);
+
+  cx.fillStyle='#3a2e18'; cx.strokeStyle='#5a4820'; cx.lineWidth=0.5;
+  cx.fillRect(R.x+2,CHQ.y,CHQ.x-R.x-2,CHQ.h); cx.strokeRect(R.x+2,CHQ.y,CHQ.x-R.x-2,CHQ.h);
+  cx.fillRect(CHQ.x+CHQ.w,CHQ.y,R.x+R.w-CHQ.x-CHQ.w-2,Math.round(CHQ.h*0.46));
+  cx.strokeRect(CHQ.x+CHQ.w,CHQ.y,R.x+R.w-CHQ.x-CHQ.w-2,Math.round(CHQ.h*0.46));
+  cx.fillRect(CHQ.x+CHQ.w,CHQ.y+Math.round(CHQ.h*0.54),R.x+R.w-CHQ.x-CHQ.w-2,Math.round(CHQ.h*0.46));
+  cx.strokeRect(CHQ.x+CHQ.w,CHQ.y+Math.round(CHQ.h*0.54),R.x+R.w-CHQ.x-CHQ.w-2,Math.round(CHQ.h*0.46));
+
+  cx.fillStyle='#c4a030'; cx.font='8px Georgia'; cx.textAlign='center';
+  cx.fillText('N benches',R.x+CHQ.x/2-R.x/2+2,CHQ.y+CHQ.h/2);
+  cx.save(); cx.translate(CHQ.x+CHQ.w+(R.x+R.w-CHQ.x-CHQ.w)/2,CHQ.y+CHQ.h*0.23); cx.fillText('S benches',0,0); cx.restore();
+  cx.save(); cx.translate(CHQ.x+CHQ.w+(R.x+R.w-CHQ.x-CHQ.w)/2,CHQ.y+CHQ.h*0.77); cx.fillText('S benches',0,0); cx.restore();
+
+  cx.fillStyle='#f5e0a0'; cx.strokeStyle='#c4a030'; cx.lineWidth=2;
+  cx.fillRect(ALT.x,ALT.y,ALT.w,ALT.h); cx.strokeRect(ALT.x,ALT.y,ALT.w,ALT.h);
+  cx.fillStyle='#4a2e08'; cx.font='bold 10px Georgia'; cx.textAlign='center';
+  cx.fillText('ALTAR',ALT.x+ALT.w/2,ALT.y+16);
+  cx.fillStyle='#d4c080'; cx.strokeStyle='#8a6820'; cx.lineWidth=1;
+  cx.fillRect(ALT.x+16,ALT.y+24,44,14); cx.strokeRect(ALT.x+16,ALT.y+24,44,14);
+  cx.beginPath(); cx.moveTo(ALT.x+38,ALT.y+24); cx.lineTo(ALT.x+38,ALT.y+38); cx.stroke();
+  cx.beginPath(); cx.moveTo(ALT.x+16,ALT.y+30); cx.lineTo(ALT.x+60,ALT.y+30); cx.stroke();
+  cx.beginPath(); cx.moveTo(ALT.x+16,ALT.y+35); cx.lineTo(ALT.x+60,ALT.y+35); cx.stroke();
+
+  [[ALT.x-18,CHQ_CY-14,'W'],[ALT.x-18,CHQ_CY+14,'S'],[ALT.x+ALT.w+18,CHQ_CY,'B']].forEach(([bx,by,l])=>{
+    cx.beginPath(); cx.arc(bx,by,7,0,Math.PI*2);
+    cx.fillStyle='#f0c040'; cx.fill(); cx.strokeStyle='#a07828'; cx.lineWidth=1.5; cx.stroke();
+    cx.fillStyle='#4a2e08'; cx.font='bold 8px Georgia'; cx.textAlign='center';
+    cx.fillText(l,bx,by+3);
+  });
+
+  cx.fillStyle='#f0f0d8'; cx.strokeStyle='#6a5020'; cx.lineWidth=2;
+  cx.fillRect(270,446,44,18); cx.strokeRect(270,446,44,18);
+  cx.fillRect(314,446,44,18); cx.strokeRect(314,446,44,18);
+  cx.fillStyle='#8a7040'; cx.font='10px Georgia'; cx.textAlign='center';
+  cx.fillText('L',292,458); cx.fillText('R',336,458);
+  cx.beginPath(); cx.arc(270,463,13,Math.PI,0); cx.strokeStyle='#5a4820'; cx.lineWidth=1; cx.stroke();
+  cx.beginPath(); cx.arc(358,463,13,Math.PI,0); cx.strokeStyle='#5a4820'; cx.lineWidth=1; cx.stroke();
+
+  cx.fillStyle='#8a6820'; cx.font='10px Georgia'; cx.textAlign='center';
+  cx.fillText('EAST', W/2, 12);
+  cx.fillText('WEST / entrance', W/2, 498);
+  cx.save(); cx.translate(44,260); cx.rotate(-Math.PI/2); cx.fillText('NORTH',0,0); cx.restore();
+  cx.save(); cx.translate(W-30,260); cx.rotate(Math.PI/2); cx.fillText('SOUTH',0,0); cx.restore();
+
+  cx.fillStyle='#5a4820'; cx.font='9px Georgia'; cx.textAlign='left';
+  cx.fillText('Tyler outside',370,455);
+}
+
+function buildPips(){
+  const d=document.getElementById('progress');
+  d.innerHTML='';
+  STEPS.forEach((_,i)=>{
+    const p=document.createElement('div');
+    p.className='pip'+(i<cur?' done':(i===cur?' active':''));
+    p.onclick=()=>{ cur=i; animTo(cur); };
+    d.appendChild(p);
+  });
+}
+
+function render(){
+  drawRoom();
+  const s=STEPS[cur];
+  ALL.forEach(k=>{ if(pos[k]) drawFigure(k,pos[k],s.hl,s.open); });
+  document.getElementById('step-title').textContent=s.title+' — Step '+(cur+1)+' of '+STEPS.length;
+  if(SPEECH[cur]) speak(SPEECH[cur]);
+  document.getElementById('info-box').textContent=s.desc;
+  document.getElementById('step-lbl').textContent=(cur+1)+' / '+STEPS.length;
+  buildPips();
+}
+
+function animTo(step){
+  const target=STEPS[step].pos;
+  const start={};
+  ALL.forEach(k=>{ start[k]={...pos[k]}; });
+  let t=0; const dur=55;
+  const tick=setInterval(()=>{
+    t++;
+    const e=1-Math.pow(1-Math.min(t/dur,1),3);
+    ALL.forEach(k=>{
+      if(target[k]) pos[k]={x:lerp(start[k].x,target[k].x,e),y:lerp(start[k].y,target[k].y,e)};
+    });
+    render();
+    if(t>=dur) clearInterval(tick);
+  },18);
+}
+
+function next(){ if(cur<STEPS.length-1){ cur++; animTo(cur); } }
+function prev(){ if(cur>0){ cur--; animTo(cur); } }
+
+
+
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight') next();
+  else if(e.key==='ArrowLeft') prev();
+});
+
+render();
+</script>
+</body>
+</html>
