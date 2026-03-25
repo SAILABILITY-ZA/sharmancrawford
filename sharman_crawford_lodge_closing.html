@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sharman Crawford Lodge No. 608 — Closing of the Lodge</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #1a1410;
+    color: #e8d5a0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 16px;
+    padding: 16px 24px;
+    border: 1px solid #a07828;
+    border-radius: 4px;
+    background: #221a0e;
+    max-width: 680px;
+    width: 100%;
+  }
+  header h1 { font-size: 18px; color: #f0c040; letter-spacing: 1px; margin-bottom: 4px; }
+  header p  { font-size: 11px; color: #a08040; letter-spacing: 2px; text-transform: uppercase; }
+  #main {
+    background: #221a0e;
+    border: 1px solid #a07828;
+    border-radius: 4px;
+    padding: 12px;
+    max-width: 680px;
+    width: 100%;
+  }
+  canvas { display: block; width: 100%; border: 1px solid #3a2e18; border-radius: 2px; }
+  #step-title { font-size: 11px; color: #a07828; text-align: center; text-transform: uppercase; letter-spacing: 2px; margin: 8px 0 4px; }
+  #info-box {
+    font-size: 13px; color: #d4b870; min-height: 54px; margin: 0 0 6px;
+    text-align: center; line-height: 1.6; padding: 8px 12px;
+    background: #1a1410; border: 1px solid #3a2e18; border-radius: 2px;
+  }
+  #controls { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
+  button {
+    background: #2e2210; color: #f0c040; border: 1px solid #a07828;
+    padding: 7px 18px; font-family: Georgia, serif; font-size: 13px;
+    cursor: pointer; border-radius: 2px; transition: background 0.2s;
+  }
+  button:hover { background: #3d2e14; }
+  #speech-btn { border-color: #6a5020; color: #a08040; }
+  #step-lbl { font-size: 11px; color: #8a6820; min-width: 60px; text-align: center; }
+  #progress { display: flex; gap: 3px; justify-content: center; margin-top: 8px; flex-wrap: wrap; padding: 0 4px; }
+  .pip { width: 8px; height: 8px; border-radius: 50%; background: #3a2e18; border: 1px solid #5a4820; cursor: pointer; transition: background 0.3s; }
+  .pip.active { background: #f0c040; border-color: #f0c040; }
+  .pip.done { background: #a07828; border-color: #a07828; }
+  footer { text-align: center; margin-top: 14px; font-size: 11px; color: #5a4820; letter-spacing: 1px; max-width: 680px; width: 100%; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sharman Crawford Lodge No. 608</h1>
+  <p>Irish Constitution &nbsp;&bull;&nbsp; Closing of the Craft Lodge &nbsp;&bull;&nbsp; Training Tool</p>
+</header>
+<div id="main">
+  <canvas id="cv" width="640" height="500"></canvas>
+  <div id="step-title">Step 1 of 17</div>
+  <div id="info-box">Press Next to begin the closing ceremony.</div>
+  <div id="controls">
+    <button onclick="prev()">&#8592; Prev</button>
+    <button id="speech-btn" onclick="toggleSpeech()">Voice On</button>
+    <button onclick="next()">Next &#8594;</button>
+    <span id="step-lbl">1 / 22</span>
+  </div>
+  <div id="progress"></div>
+</div>
+<footer>Sharman Crawford Lodge No. 608 &nbsp;&bull;&nbsp; Irish Constitution &nbsp;&bull;&nbsp; Cape Town &nbsp;&bull;&nbsp; Based on pages 34–40 of the Provincial Working</footer>
+
+<script>
+const cv = document.getElementById('cv');
+const cx = cv.getContext('2d');
+const W=640, H=500;
+const R={x:70,y:10,w:480,h:450};
+const CHQ={x:108,y:78,w:360,h:332};
+const CHQ_CX=CHQ.x+CHQ.w/2, CHQ_CY=CHQ.y+CHQ.h/2;
+const AW=80, AH=52;
+const ALT={x:CHQ_CX-AW/2, y:CHQ_CY-AH/2, w:AW, h:AH};
+
+const FINAL={
+  DC:{x:280,y:38}, WM:{x:258,y:38}, SD:{x:140,y:38},
+  Chap:{x:510,y:160}, SC:{x:140,y:108}, Alm:{x:510,y:38},
+  Tres:{x:140,y:108}, Sect:{x:510,y:108},
+  JW:{x:510,y:268}, SW:{x:288,y:390}, JD:{x:352,y:390},
+  IG:{x:132,y:402}, Tyler:{x:255,y:472}
+};
+const ALTAR_POS={
+  DC:{x:255,y:296}, SD:{x:350,y:244}, Chap:{x:288,y:296}, JD:{x:225,y:244}
+};
+const FPOS=Object.fromEntries(Object.keys(FINAL).map(k=>[k,{...FINAL[k]}]));
+const IS_PRINCIPAL={WM:true,SW:true,JW:true};
+const ALL=['DC','IG','Chap','SC','Alm','Tres','Sect','SW','JW','SD','JD','WM','Tyler'];
+const LABELS={DC:'D.C.',Chap:'Chap.',SC:'S.C.',Alm:'Alm.',Tres:'Tres.',Sect:'Sect.',JW:'J.W.',SW:'S.W.',JD:'J.D.',SD:'S.D.',WM:'W.M.',IG:'I.G.',Tyler:'Tyler'};
+
+function altarPos(extra) {
+  return Object.assign({}, FPOS, {
+    DC:{x:255,y:296}, SD:{x:350,y:244}, Chap:{x:288,y:296}, JD:{x:225,y:244}
+  }, extra||{});
+}
+
+function retProc() {
+  const bx=310, by=520, gap=32;
+  return {
+    DC:  {x:bx,    y:by},
+    SD:  {x:bx-30, y:by+gap},
+    JD:  {x:bx+30, y:by+gap},
+    WM:  {x:bx,    y:by+gap*2},
+    SW:  {x:bx-30, y:by+gap*3},
+    JW:  {x:bx+30, y:by+gap*3},
+    Tres:{x:bx-30, y:by+gap*4},
+    Sect:{x:bx+30, y:by+gap*4},
+    Chap:{x:bx,    y:by+gap*5},
+    SC:  {x:bx-30, y:by+gap*6},
+    Alm: {x:bx+30, y:by+gap*6},
+    IG:  {x:bx,    y:by+gap*7},
+    Tyler:{x:255,y:472}
+  };
+}
+
+const STEPS=[
+  {
+    title:'The Lodge is at Labour — before closing',
+    desc:'All officers are at their places. The Lodge is at Labour on the Entered Apprentice Degree. Business of the Lodge has been completed.',
+    pos:FPOS, hl:null
+  },
+  {
+    title:'W.M. invites any Brother to speak — Grand Lodge Officers',
+    desc:'W.M. (one knock): "Brethren, as I am about to close the Lodge, has any Brother, a member of this Lodge, anything to say for the good of Freemasonry in general, or of this Lodge in particular?" (Pause.) W.M. rises to greet Grand Lodge and Provincial Grand Lodge Officers. Note: No salute is given as they were already saluted at the Opening.',
+    pos:FPOS, hl:'WM'
+  },
+  {
+    title:'W.M. invites any Visiting Brother to speak',
+    desc:'W.M. (one knock): "Brethren, as I am about to close the Lodge, has any Visiting Brother, anything to say for the good of Freemasonry in general, or of this Lodge in particular?" (Pause.) W.M. rises to greet all Visiting Brethren and thanks them for attending.',
+    pos:FPOS, hl:'WM'
+  },
+  {
+    title:'Salute to Visiting Brethren',
+    desc:'W.M.: "Brethren of the Lodge, we will now salute our Visiting Brethren with a fire taking our time from the Worshipful Brother Director of Ceremonies." (One knock with the maul.) "Rise Brethren." D.C.: "Brethren, the fire is one of nine (if visiting Worshipful Brethren are present) or nine by threes (if no visiting Worshipful Brethren are present), on the third coming down, taking your time from me." W.M.: "Be seated Brethren." Note: Grand Officers and Provincial Grand Lodge Officers should now stand with the Brethren to acknowledge the Visiting Brethren.',
+    pos:FPOS, hl:'DC'
+  },
+  {
+    title:'W.M. — any Brother anything to say?',
+    desc:'W.M. (one knock): "Brethren, as I am about to close the Lodge, has any Brother, anything to say for the good of Freemasonry in general, or of this Lodge in particular?" Note: This is an opportunity for any Brother to speak on any matter relative to the Lodge which might have been overlooked. Usually at this point the Junior Warden gives notice of Refreshment if there is a Festive Board after the meeting.',
+    pos:FPOS, hl:'WM'
+  },
+  {
+    title:'W.M. — Rise Brethren, assist me to close the Lodge',
+    desc:'W.M. (one knock): "Rise Brethren, and assist me to close the Lodge." Note: the knocks of the degree are NOT given at this point. W.M.: "Brother Senior Warden, where is your place in the Lodge?"',
+    pos:FPOS, hl:'SW'
+  },
+  {
+    title:'W.M. questions the S.W.',
+    desc:'S.W.: "In the West, Worshipful Master." W.M.: "What is your duty there?" S.W.: "As the sun sets in the West to close the glorious day, so the Senior Warden stands in the West to close the Lodge at the will and pleasure of the Worshipful Master."',
+    pos:FPOS, hl:'SW'
+  },
+  {
+    title:'Wardens declare the Lodge closed',
+    desc:'W.M.: "Let the Wardens declare to the Brethren that it is my will and pleasure that the Lodge do now Close." S.W.: "Brethren, it is the will and pleasure of the Worshipful Master that the Lodge do now Close." J.W.: "Brethren, it is the will and pleasure of the Worshipful Master that the Lodge do now Close." Note: as soon as the S.W. starts his declaration, the Deacons, D.C. and Chaplain assemble at the Altar in the same positions as the Opening.',
+    pos:FPOS, hl:'SW'
+  },
+  {
+    title:'Deacons, D.C. and Chaplain assemble at the Altar',
+    desc:'While the Wardens make their declarations, the officers assemble at the Altar in the same way as in the Opening. S.D. to the South side, J.D. to the North side. D.C. leads the Chaplain to the West side facing the W.M. in the East, with the D.C. to the North of the Chaplain. The Deacons immediately place their wands in the coping position. The W.M. waits until all are in position.',
+    pos:altarPos(), hl:'DC'
+  },
+  {
+    title:'W.M. formally closes the Lodge',
+    desc:'W.M.: "Accordingly, Brethren, in the name of the Most High God, the G.A.O.T.U., I declare this Lodge to be now closed, and to remain closed until our next Stated Communication, except in case or cases of emergency of which each Brother entitled thereto, shall receive due notice by summons or otherwise." Note: at the word CLOSED the Deacons uncope their wands and bring them down to their right side. The D.C. will disarrange the Three Great Lights. The Wardens reverse their pillars: S.W. down and J.W. up.',
+    pos:altarPos(), hl:'WM'
+  },
+  {
+    title:'Closing prayer',
+    desc:'D.C.: "Brethren, adopt the Sign of Devotion for Prayer." Chaplain: "May the blessing of Heaven rest upon us and all regular Masons; may brotherly love prevail, and every moral and social virtue cement and unite us." "Amen." All Brethren respond: "So mote it be."',
+    pos:altarPos(), hl:'Chap'
+  },
+  {
+    title:'Knocks of the degree',
+    desc:'The knocks of the degree are given by W.M., S.W., J.W. and I.G., and answered by the Tyler. Note: if a Hymn or Ode is sung it should be at this point, after which the retiring procession is assembled.',
+    pos:altarPos(), hl:null
+  },
+  {
+    title:'Retiring procession forms — D.C. leaves the Altar',
+    desc:'The D.C. leaves his position at the Altar by turning left towards the North and passes behind the J.D. to start squaring the room. As he passes the J.D. and starts moving South (East of the Altar), the J.D. falls in behind him. At the same time the S.D. moves back from his position at the Altar, turns to face West, so he will be on the outside of the J.D. when the D.C. rounds the South East corner with the J.D. behind him, and proceeds West along the South side of the room.',
+    pos:{
+      DC:{x:510,y:168}, SD:{x:510,y:220}, JD:{x:480,y:244},
+      WM:{...FINAL.WM}, Chap:{...FINAL.Chap},
+      SC:{...FINAL.SC}, Alm:{...FINAL.Alm}, Tres:{...FINAL.Tres},
+      Sect:{...FINAL.Sect}, JW:{...FINAL.JW}, SW:{...FINAL.SW},
+      IG:{...FINAL.IG}, Tyler:{...FINAL.Tyler}
+    }, hl:'DC'
+  },
+  {
+    title:'D.C. leads Deacons along the South side',
+    desc:'The D.C. now leads the two Deacons West along the South side of the room. As the D.C. approaches the J.W. Chair, the J.W. should leave his Chair by the East side in readiness to fall in behind the J.D. as they pass his Chair. The procession rounds the South West corner.',
+    pos:{
+      DC:{x:490,y:430}, SD:{x:476,y:390}, JD:{x:510,y:390},
+      WM:{...FINAL.WM}, Chap:{...FINAL.Chap},
+      SC:{...FINAL.SC}, Alm:{...FINAL.Alm}, Tres:{...FINAL.Tres},
+      Sect:{...FINAL.Sect}, JW:{x:510,y:340}, SW:{...FINAL.SW},
+      IG:{...FINAL.IG}, Tyler:{...FINAL.Tyler}
+    }, hl:'DC'
+  },
+  {
+    title:'Procession proceeds North along the West side',
+    desc:'The procession proceeds North along the West side of the room. As the D.C. rounds the South West corner, the S.W. should leave his Chair by the South side in readiness to fall in beside the S.D., next to the J.W., as the procession passes his Chair. The procession then proceeds East along the North side of the room.',
+    pos:{
+      DC:{x:260,y:430}, SD:{x:320,y:415}, JD:{x:320,y:445},
+      WM:{...FINAL.WM}, Chap:{...FINAL.Chap},
+      SC:{...FINAL.SC}, Alm:{...FINAL.Alm}, Tres:{...FINAL.Tres},
+      Sect:{...FINAL.Sect}, JW:{x:380,y:445}, SW:{x:380,y:415},
+      IG:{...FINAL.IG}, Tyler:{...FINAL.Tyler}
+    }, hl:'DC'
+  },
+  {
+    title:'Retiring procession assembles (page 40)',
+    desc:'The retiring procession forms up outside the Lodge Room led by the D.C. Order from front to rear: D.C. alone — S.D./J.D. flanking — W.M. alone — S.W./J.W. — Treasurer/Secretary — Chaplain alone — S.C./Almoner — All Other Brethren — I.G. last (joins as procession passes his position at the door). The Lodge traditionally closes with the singing of When Irish Eyes Are Smiling.',
+    pos:{
+      DC:{x:390,y:400}, SD:{x:368,y:362}, JD:{x:412,y:362},
+      WM:{x:390,y:324}, SW:{x:368,y:286}, JW:{x:412,y:286},
+      Tres:{x:368,y:248}, Sect:{x:412,y:248},
+      Chap:{x:390,y:210}, SC:{x:368,y:172}, Alm:{x:412,y:172},
+      IG:{x:390,y:134}, Tyler:{x:255,y:472}
+    }, hl:null
+  },
+  {
+    title:'The Lodge is closed',
+    desc:'This concludes the Closing Ceremony of Sharman Crawford Lodge No. 608. The Lodge is closed from Labour to Refreshment. The Brethren proceed to the Festive Board.',
+    pos:{
+      DC:{x:390,y:400}, SD:{x:368,y:362}, JD:{x:412,y:362},
+      WM:{x:390,y:324}, SW:{x:368,y:286}, JW:{x:412,y:286},
+      Tres:{x:368,y:248}, Sect:{x:412,y:248},
+      Chap:{x:390,y:210}, SC:{x:368,y:172}, Alm:{x:412,y:172},
+      IG:{x:390,y:134}, Tyler:{x:255,y:472}
+    }, hl:null
+  }
+];
+
+const SPEECH=[
+  "The Lodge is at Labour on the Entered Apprentice Degree. All officers are at their places. Business of the Lodge has been completed and the Worshipful Master is about to close the Lodge.",
+  "Worshipful Master (one knock): Brethren, as I am about to close the Lodge, has any Brother, a member of this Lodge, anything to say for the good of Freemasonry in general, or of this Lodge in particular? The Worshipful Master then rises to greet Grand Lodge and Provincial Grand Lodge Officers. Note: no salute is given as they were already saluted at the Opening of the Lodge.",
+  "Worshipful Master (one knock): Brethren, as I am about to close the Lodge, has any Visiting Brother, anything to say for the good of Freemasonry in general, or of this Lodge in particular? The Worshipful Master rises to greet all Visiting Brethren and thanks them with appropriate personal wording for attending the meeting.",
+  "Worshipful Master: Brethren of the Lodge, we will now salute our Visiting Brethren with a fire taking our time from the Worshipful Brother Director of Ceremonies. Rise Brethren. Director of Ceremonies: Brethren, the fire is one of nine if visiting Worshipful Brethren are present, or nine by threes if no visiting Worshipful Brethren are present, on the third coming down, taking your time from me. Worshipful Master: Be seated Brethren. Note: Grand Officers and Provincial Grand Lodge Officers should now stand with the Brethren to acknowledge the Visiting Brethren.",
+  "Worshipful Master (one knock): Brethren, as I am about to close the Lodge, has any Brother, anything to say for the good of Freemasonry in general, or of this Lodge in particular? This is an opportunity for any Brother to speak on any matter relative to the Lodge which might have been overlooked. Usually at this point the Junior Warden gives notice of Refreshment if there is a Festive Board after the meeting.",
+  "Worshipful Master (one knock): Rise Brethren, and assist me to close the Lodge. Important note: the knocks of the degree are NOT given at this point. Worshipful Master: Brother Senior Warden, where is your place in the Lodge?",
+  "Senior Warden: In the West, Worshipful Master. Worshipful Master: What is your duty there? Senior Warden: As the sun sets in the West to close the glorious day, so the Senior Warden stands in the West to close the Lodge at the will and pleasure of the Worshipful Master.",
+  "Worshipful Master: Let the Wardens declare to the Brethren that it is my will and pleasure that the Lodge do now Close. Senior Warden: Brethren, it is the will and pleasure of the Worshipful Master that the Lodge do now Close. Junior Warden: Brethren, it is the will and pleasure of the Worshipful Master that the Lodge do now Close. Note: as soon as the Senior Warden starts his declaration, the Deacons, Director of Ceremonies and Chaplain begin to assemble at the Altar.",
+  "While the Wardens make their declarations, the Deacons, Director of Ceremonies and Chaplain assemble at the Altar in the same positions as the Opening. Senior Deacon to the South side, Junior Deacon to the North side. The Director of Ceremonies leads the Chaplain to the West side of the Altar facing the Worshipful Master in the East, with the Director of Ceremonies to the North of the Chaplain. The Deacons immediately place their wands in the coping position. The Worshipful Master waits until all are in position before continuing.",
+  "Worshipful Master: Accordingly, Brethren, in the name of the Most High God, the Grand Architect of the Universe, I declare this Lodge to be now closed, and to remain closed until our next Stated Communication, except in case or cases of emergency of which each Brother entitled thereto, shall receive due notice by summons or otherwise. Important note: at the word closed, the Deacons uncope their wands and bring them down to their right side. The Director of Ceremonies will disarrange the Three Great Lights. The Wardens reverse their pillars: Senior Warden down and Junior Warden up.",
+  "Director of Ceremonies: Brethren, adopt the Sign of Devotion for Prayer. Chaplain: May the blessing of Heaven rest upon us and all regular Masons; may brotherly love prevail, and every moral and social virtue cement and unite us. Amen. All Brethren respond: So mote it be.",
+  "The knocks of the degree are given by the Worshipful Master, Senior Warden, Junior Warden and Inner Guard, and answered by the Tyler. Note: if a Hymn or Ode is sung it should be at this point, after which the retiring procession is assembled.",
+  "The Director of Ceremonies leaves his position at the Altar by turning left towards the North and passes behind the Junior Deacon to start squaring the room. As he passes the Junior Deacon and starts moving South, East of the Altar, the Junior Deacon falls in behind him. At the same time the Senior Deacon moves back from his position at the Altar, turns to face West, so he will be on the outside of the Junior Deacon when the Director of Ceremonies rounds the South East corner with the Junior Deacon behind him, and proceeds West along the South side of the room.",
+  "The Director of Ceremonies now leads the two Deacons West along the South side of the room. As the Director of Ceremonies approaches the Junior Wardens Chair, the Junior Warden should leave his Chair by the East side in readiness to fall in behind the Junior Deacon as they pass his Chair. The procession rounds the South West corner.",
+  "The procession proceeds North along the West side of the room. As the Director of Ceremonies rounds the South West corner, the Senior Warden should leave his Chair by the South side in readiness to fall in behind the Senior Deacon next to the Junior Warden as the procession passes his Chair. The procession then proceeds East along the North side of the room.",
+    "The procession proceeds East along the North side. As it passes the Treasurer and Secretary at their table, they join the procession. The Chaplain at the Altar turns left and joins behind them. The procession then forms up outside as shown. The Lodge traditionally closes with the singing of When Irish Eyes Are Smiling.",
+  "This concludes the Closing Ceremony of Sharman Crawford Lodge Number six hundred and eight under the Irish Constitution. The Lodge is closed from Labour to Refreshment. The Brethren proceed to the Festive Board."
+];
+
+let cur=0;
+let pos={};
+ALL.forEach(k=>{ pos[k]={...FINAL[k]}; });
+
+function lerp(a,b,t){return a+(b-a)*t;}
+
+let speechEnabled=true;
+let speakQueue=[];
+let voiceA=null, voiceB=null;
+
+function loadVoices(){
+  if(!window.speechSynthesis) return;
+  var voices=window.speechSynthesis.getVoices();
+  var FEMALE=['zira','victoria','samantha','karen','moira','tessa','fiona','veena','susan','serena','linda','kate','lisa','emma','alice','sarah','anna','claire','hazel','emily','allison','ava','joanna','salli','kimberly','kendra','ivy','aria','jenny','michelle','elizabeth','amy','natasha','catherine','melissa','female','woman','girl','lady'];
+  var en=voices.filter(function(v){return v.lang.startsWith('en');});
+  if(en.length===0) en=voices;
+  var male=en.filter(function(v){
+    var n=v.name.toLowerCase();
+    return !FEMALE.some(function(f){return n.indexOf(f)!==-1;});
+  });
+  if(male.length===0) male=en;
+  voiceA=male[0]||null;
+  voiceB=male.length>1?male[1]:male[0];
+  console.log('voiceA:',voiceA?voiceA.name:'none','voiceB:',voiceB?voiceB.name:'none');
+}
+
+var LABEL_MAP={'W.M.':'Worshipful Master','S.W.':'Senior Warden','J.W.':'Junior Warden','S.D.':'Senior Deacon','J.D.':'Junior Deacon','I.G.':'Inner Guard','D.C.':'Director of Ceremonies','Chap.':'Chaplain','Tyler':'Tyler','All:':'All Brethren respond','All Brethren respond:':'All Brethren respond'};
+function expandLabel(t){t=t.replace(/:$/,'').trim(); return LABEL_MAP[t]||t;}
+function parseSegments(text){
+  var segments=[];
+  var labelPattern=/([A-Z]\.[A-Z]\.|[A-Za-z][a-z]+(?: [A-Za-z][a-z]+)*|All Brethren respond|All|Tyler|Chaplain):\s*/g;
+  var match, lastIndex=0, parts=[];
+  while((match=labelPattern.exec(text))!==null){
+    if(match.index>lastIndex) parts.push({type:'text',content:text.substring(lastIndex,match.index)});
+    parts.push({type:'label',content:match[1]});
+    lastIndex=match.index+match[0].length;
+  }
+  if(lastIndex<text.length) parts.push({type:'text',content:text.substring(lastIndex)});
+  var i=0;
+  while(i<parts.length){
+    var p=parts[i];
+    if(p.type==='label'){
+      segments.push({text:expandLabel(p.content),voice:'A'});
+      if(i+1<parts.length&&parts[i+1].type==='text'){
+        var spoken=parts[i+1].content.trim();
+        if(spoken) segments.push({text:spoken,voice:'B'});
+        i+=2;
+      } else i++;
+    } else {
+      var plain=p.content.trim();
+      if(plain) segments.push({text:plain,voice:'A'});
+      i++;
+    }
+  }
+  return segments;
+}
+
+function playBeep(onDone){
+  try{
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    var osc=ctx.createOscillator(); var gain=ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type='sine'; osc.frequency.value=880;
+    gain.gain.setValueAtTime(0.3,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime+0.35);
+    osc.onended=function(){ctx.close(); setTimeout(onDone,80);};
+  } catch(e){setTimeout(onDone,300);}
+}
+
+function processQueue(){
+  if(speakQueue.length===0) return;
+  var item=speakQueue.shift();
+  if(item.beep){playBeep(function(){setTimeout(processQueue,60);}); return;}
+  if(!window.speechSynthesis){speakQueue=[];return;}
+  try{
+    var u=new SpeechSynthesisUtterance(item.text);
+    if(item.voice==='B'){u.voice=voiceB;u.rate=0.78;u.pitch=0.50;}
+    else{u.voice=voiceA;u.rate=0.88;u.pitch=0.85;}
+    u.volume=1.0;
+    u.onend=function(){setTimeout(processQueue,180);};
+    u.onerror=function(){setTimeout(processQueue,180);};
+    window.speechSynthesis.speak(u);
+  } catch(e){setTimeout(processQueue,180);}
+}
+
+function speak(text){
+  if(!speechEnabled) return;
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  speakQueue=[];
+  if(!voiceA) loadVoices();
+  var segs=parseSegments(text);
+  if(segs.length===0) segs=[{text:text,voice:'A'}];
+  var expanded=[];
+  segs.forEach(function(seg){
+    var parts=seg.text.split('[beep]');
+    parts.forEach(function(p,i){
+      if(p.trim()) expanded.push({text:p.trim(),voice:seg.voice});
+      if(i<parts.length-1) expanded.push({beep:true});
+    });
+  });
+  speakQueue=expanded.length>0?expanded:segs;
+  setTimeout(processQueue,150);
+}
+
+function toggleSpeech(){
+  speechEnabled=!speechEnabled;
+  document.getElementById('speech-btn').textContent=speechEnabled?'Voice On':'Voice Off';
+  if(!speechEnabled){try{window.speechSynthesis.cancel();}catch(e){} speakQueue=[];}
+}
+
+if(window.speechSynthesis){
+  window.speechSynthesis.addEventListener('voiceschanged',loadVoices);
+  setTimeout(loadVoices,500);
+}
+
+function drawFigure(key,p,hl){
+  if(!p) return;
+  var isPrincipal=IS_PRINCIPAL[key];
+  var isTyler=key==='Tyler';
+  var isHL=hl===key;
+  var isOut=p.y>R.y+R.h+5;
+  cx.globalAlpha=isOut?0.5:1;
+
+  if(isTyler){
+    cx.setLineDash([4,3]);
+    cx.strokeStyle=isHL?'#f0c040':'#8a7040'; cx.lineWidth=1.5;
+    cx.strokeRect(p.x-28,p.y-10,60,26);
+    cx.setLineDash([]);
+    cx.fillStyle=isHL?'#f0c040':'#c8a040'; cx.font='bold 10px Georgia'; cx.textAlign='center';
+    cx.fillText('Tyler',p.x+2,p.y+3);
+    cx.fillStyle='#6a5020'; cx.font='9px Georgia';
+    cx.fillText('outside',p.x+2,p.y+14);
+    cx.globalAlpha=1; return;
+  }
+
+  var headColor=isHL?'#f0c040':(isPrincipal?'#4a9fd4':'#c8a870');
+  var bodyColor=isHL?'#c8860a':(isPrincipal?'#1a5a8a':'#5a4820');
+  cx.beginPath(); cx.arc(p.x,p.y,8,0,Math.PI*2);
+  cx.fillStyle=headColor; cx.fill();
+  cx.strokeStyle=isHL?'#f0c040':'#2a1a08'; cx.lineWidth=1.5; cx.stroke();
+  cx.strokeStyle=bodyColor; cx.lineWidth=2;
+  cx.beginPath();
+  cx.moveTo(p.x,p.y+8); cx.lineTo(p.x,p.y+24);
+  cx.moveTo(p.x-9,p.y+14); cx.lineTo(p.x+9,p.y+14);
+  cx.moveTo(p.x,p.y+24); cx.lineTo(p.x-7,p.y+37);
+  cx.moveTo(p.x,p.y+24); cx.lineTo(p.x+7,p.y+37);
+  cx.stroke();
+  cx.fillStyle=isHL?'#185FA5':'#333'; cx.font='9px Georgia'; cx.textAlign='center';
+  cx.fillText(LABELS[key],p.x,p.y+50);
+  cx.globalAlpha=1;
+}
+
+function drawRoom(){
+  cx.clearRect(0,0,W,H);
+  cx.fillStyle='#2a1f0e'; cx.fillRect(R.x,R.y,R.w,R.h);
+  cx.strokeStyle='#6a5020'; cx.lineWidth=2; cx.strokeRect(R.x,R.y,R.w,R.h);
+  var sq=36;
+  for(var r=0;r<Math.ceil(CHQ.h/sq);r++){
+    for(var c=0;c<Math.ceil(CHQ.w/sq);c++){
+      var fw=Math.min(sq,CHQ.w-c*sq),fh=Math.min(sq,CHQ.h-r*sq);
+      if(fw>0&&fh>0){cx.fillStyle=(r+c)%2===0?'#1a1410':'#d4c8a0'; cx.fillRect(CHQ.x+c*sq,CHQ.y+r*sq,fw,fh);}
+    }
+  }
+  cx.strokeStyle='#5a4820'; cx.lineWidth=0.5; cx.strokeRect(CHQ.x,CHQ.y,CHQ.w,CHQ.h);
+  cx.fillStyle='#3a2e18'; cx.strokeStyle='#5a4820'; cx.lineWidth=0.5;
+  cx.fillRect(R.x+2,CHQ.y,CHQ.x-R.x-2,CHQ.h); cx.strokeRect(R.x+2,CHQ.y,CHQ.x-R.x-2,CHQ.h);
+  cx.fillRect(CHQ.x+CHQ.w,CHQ.y,R.x+R.w-CHQ.x-CHQ.w-2,CHQ.h*0.44); cx.strokeRect(CHQ.x+CHQ.w,CHQ.y,R.x+R.w-CHQ.x-CHQ.w-2,CHQ.h*0.44);
+  cx.fillRect(CHQ.x+CHQ.w,CHQ.y+CHQ.h*0.56,R.x+R.w-CHQ.x-CHQ.w-2,CHQ.h*0.44); cx.strokeRect(CHQ.x+CHQ.w,CHQ.y+CHQ.h*0.56,R.x+R.w-CHQ.x-CHQ.w-2,CHQ.h*0.44);
+  cx.fillStyle='#c4a030'; cx.font='9px Georgia'; cx.textAlign='center';
+  cx.fillText('North benches',R.x+2+(CHQ.x-R.x-2)/2,CHQ.y+CHQ.h/2);
+  cx.fillText('S. benches',CHQ.x+CHQ.w+(R.x+R.w-CHQ.x-CHQ.w-2)/2,CHQ.y+CHQ.h*0.22);
+  cx.fillText('S. benches',CHQ.x+CHQ.w+(R.x+R.w-CHQ.x-CHQ.w-2)/2,CHQ.y+CHQ.h*0.78);
+  cx.fillStyle='#f5e0a0'; cx.strokeStyle='#c4a030'; cx.lineWidth=2;
+  cx.fillRect(ALT.x,ALT.y,ALT.w,ALT.h); cx.strokeRect(ALT.x,ALT.y,ALT.w,ALT.h);
+  cx.fillStyle='#4a2e08'; cx.font='bold 10px Georgia'; cx.textAlign='center';
+  cx.fillText('ALTAR',ALT.x+ALT.w/2,ALT.y+15);
+  cx.fillStyle='#d4c080'; cx.strokeStyle='#8a6820'; cx.lineWidth=1;
+  cx.fillRect(ALT.x+16,ALT.y+23,48,16); cx.strokeRect(ALT.x+16,ALT.y+23,48,16);
+  cx.beginPath(); cx.moveTo(ALT.x+40,ALT.y+23); cx.lineTo(ALT.x+40,ALT.y+39); cx.stroke();
+  cx.beginPath(); cx.moveTo(ALT.x+16,ALT.y+29); cx.lineTo(ALT.x+64,ALT.y+29); cx.stroke();
+  cx.beginPath(); cx.moveTo(ALT.x+16,ALT.y+34); cx.lineTo(ALT.x+64,ALT.y+34); cx.stroke();
+  [[ALT.x-18,CHQ_CY-14,'W'],[ALT.x-18,CHQ_CY+14,'S'],[ALT.x+ALT.w+18,CHQ_CY,'B']].forEach(function(a){
+    cx.beginPath(); cx.arc(a[0],a[1],7,0,Math.PI*2);
+    cx.fillStyle='#f0c040'; cx.fill(); cx.strokeStyle='#a07828'; cx.lineWidth=1.5; cx.stroke();
+    cx.fillStyle='#4a2e08'; cx.font='bold 8px Georgia'; cx.textAlign='center'; cx.fillText(a[2],a[0],a[1]+3);
+  });
+  cx.fillStyle='#f0f0d8'; cx.strokeStyle='#6a5020'; cx.lineWidth=2;
+  cx.fillRect(270,446,44,18); cx.strokeRect(270,446,44,18);
+  cx.fillRect(314,446,44,18); cx.strokeRect(314,446,44,18);
+  cx.strokeStyle='#6a5020'; cx.lineWidth=1.5;
+  cx.beginPath(); cx.arc(270,463,13,Math.PI,0); cx.stroke();
+  cx.beginPath(); cx.arc(358,463,13,Math.PI,0); cx.stroke();
+  cx.fillStyle='#8a7040'; cx.font='10px Georgia'; cx.textAlign='center';
+  cx.fillText('L',292,458); cx.fillText('R',336,458);
+  cx.fillStyle='#8a6820'; cx.font='10px Georgia'; cx.textAlign='center';
+  cx.fillText('EAST',W/2,12); cx.fillText('WEST / entrance',W/2,498);
+  cx.save(); cx.translate(44,H/2); cx.rotate(-Math.PI/2); cx.fillText('NORTH',0,0); cx.restore();
+  cx.save(); cx.translate(W-28,H/2); cx.rotate(Math.PI/2); cx.fillText('SOUTH',0,0); cx.restore();
+  cx.fillStyle='#6a5020'; cx.font='9px Georgia'; cx.textAlign='left';
+  cx.fillText('Tyler outside',390,455);
+}
+
+function buildPips(){
+  var d=document.getElementById('progress'); d.innerHTML='';
+  STEPS.forEach(function(_,i){
+    var p=document.createElement('div');
+    p.className='pip'+(i<cur?' done':(i===cur?' active':''));
+    p.onclick=function(){cur=i;animTo(cur);};
+    d.appendChild(p);
+  });
+}
+
+function render(){
+  drawRoom();
+  var s=STEPS[cur];
+  ALL.forEach(function(k){if(pos[k]) drawFigure(k,pos[k],s.hl);});
+  document.getElementById('step-title').textContent=s.title+' — Step '+(cur+1)+' of '+STEPS.length;
+  var infoBox = document.getElementById('info-box');
+  if (cur === STEPS.length-2 || cur === STEPS.length-1) {
+    infoBox.innerHTML = s.desc.replace(
+      'When Irish Eyes Are Smiling',
+      '<a href="https://www.irish-song-lyrics.com/When_Irish_Eyes_Smiling.shtml" target="_blank" style="color:#f0c040;">When Irish Eyes Are Smiling (lyrics)</a>'
+    );
+  } else {
+    infoBox.textContent = s.desc;
+  }
+  document.getElementById('step-lbl').textContent=(cur+1)+' / '+STEPS.length;
+  buildPips();
+}
+
+function animTo(step){
+  var target=STEPS[step].pos;
+  var start={};
+  ALL.forEach(function(k){start[k]={...pos[k]};});
+  var t=0; var dur=55;
+  var tick=setInterval(function(){
+    t++; var e=1-Math.pow(1-Math.min(t/dur,1),3);
+    ALL.forEach(function(k){
+      if(target[k]) pos[k]={x:lerp(start[k].x,target[k].x,e),y:lerp(start[k].y,target[k].y,e)};
+    });
+    render();
+    if(t>=dur){clearInterval(tick); if(SPEECH[cur]) speak(SPEECH[cur]);}
+  },18);
+}
+
+function next(){if(cur<STEPS.length-1){cur++;animTo(cur);}}
+function prev(){if(cur>0){cur--;animTo(cur);}}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight') next();
+  else if(e.key==='ArrowLeft') prev();
+});
+
+render();
+</script>
+</body>
+</html>
