@@ -653,6 +653,20 @@
     <div class="centenary-year">1927 — 2027</div>
     <div class="centenary-text">Sharman Crawford Lodge was consecrated on 16 May 1927. In 2027 we mark our centenary — one hundred years of brotherhood, charity, and truth in Cape Town.</div>
     <div class="centenary-date">Centenary celebrations coming 2027</div>
+    <div style="margin-top: 1.5rem;">
+      <div style="font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.25em; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 0.5rem;">Days remaining until 16 May 2027</div>
+      <div id="centenary-counter" style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--gold); letter-spacing: 0.1em;">—</div>
+      <div style="font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.2em; color: var(--gold-dim); text-transform: uppercase; margin-top: 0.3rem;">days to go</div>
+    </div>
+    <script>
+      (function() {
+        var target = new Date('2027-05-16');
+        var today  = new Date();
+        today.setHours(0,0,0,0);
+        var diff   = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+        document.getElementById('centenary-counter').textContent = diff.toLocaleString();
+      })();
+    </script>
   </div>
 </section>
 
