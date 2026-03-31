@@ -1063,5 +1063,94 @@ function logout() {
   goBackToStep1();
 }
 </script>
+  <!-- ACCESSIBILITY TOOLBAR -->
+  <div id="a11y-bar" style="
+    position: fixed;
+    bottom: 1.2rem;
+    right: 1.2rem;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(10,9,5,0.92);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 0.5rem 0.8rem;
+    backdrop-filter: blur(10px);
+  ">
+    <span style="font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.15em; color:#7a6330; text-transform:uppercase; margin-right:0.3rem;">Accessibility</span>
+    <button onclick="adjustFont(-1)" title="Decrease text size" style="background:transparent; border:1px solid rgba(201,168,76,0.2); color:#c9a84c; font-size:0.9rem; width:28px; height:28px; cursor:pointer; line-height:1; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.6)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)'">A-</button>
+    <button onclick="adjustFont(1)"  title="Increase text size" style="background:transparent; border:1px solid rgba(201,168,76,0.2); color:#c9a84c; font-size:0.9rem; width:28px; height:28px; cursor:pointer; line-height:1; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.6)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)'">A+</button>
+    <button onclick="toggleContrast()" id="btn-contrast" title="Toggle high contrast" style="background:transparent; border:1px solid rgba(201,168,76,0.2); color:#c9a84c; font-size:0.7rem; font-family:'Cinzel',serif; letter-spacing:0.1em; padding:0 0.5rem; height:28px; cursor:pointer; white-space:nowrap; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.6)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)'">Contrast</button>
+    <button onclick="toggleDyslexic()" id="btn-dyslexic" title="Toggle dyslexia-friendly font" style="background:transparent; border:1px solid rgba(201,168,76,0.2); color:#c9a84c; font-size:0.7rem; font-family:'Cinzel',serif; letter-spacing:0.1em; padding:0 0.5rem; height:28px; cursor:pointer; white-space:nowrap; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.6)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)'">Dyslexic</button>
+  </div>
+
+  <link id="dyslexic-font" rel="stylesheet" href="" disabled>
+
+  <script>
+  (function() {
+    // Font size
+    var sizes   = [85, 92, 100, 110, 120, 132];
+    var sizeIdx = parseInt(localStorage.getItem('sc608_fontsize') || '2');
+
+    function applySize() {
+      document.documentElement.style.fontSize = sizes[sizeIdx] + '%';
+      localStorage.setItem('sc608_fontsize', sizeIdx);
+    }
+
+    window.adjustFont = function(dir) {
+      sizeIdx = Math.max(0, Math.min(sizes.length - 1, sizeIdx + dir));
+      applySize();
+    };
+
+    applySize();
+
+    // High contrast
+    var contrast = localStorage.getItem('sc608_contrast') === '1';
+
+    function applyContrast() {
+      if (contrast) {
+        document.body.style.filter = 'contrast(1.25) brightness(1.1)';
+        document.getElementById('btn-contrast').style.background = 'rgba(201,168,76,0.2)';
+      } else {
+        document.body.style.filter = '';
+        document.getElementById('btn-contrast').style.background = 'transparent';
+      }
+      localStorage.setItem('sc608_contrast', contrast ? '1' : '0');
+    }
+
+    window.toggleContrast = function() {
+      contrast = !contrast;
+      applyContrast();
+    };
+
+    applyContrast();
+
+    // Dyslexic font
+    var dyslexic = localStorage.getItem('sc608_dyslexic') === '1';
+
+    function applyDyslexic() {
+      var link = document.getElementById('dyslexic-font');
+      if (dyslexic) {
+        link.href = 'https://fonts.cdnfonts.com/css/opendyslexic';
+        link.disabled = false;
+        document.body.style.fontFamily = 'OpenDyslexic, sans-serif';
+        document.getElementById('btn-dyslexic').style.background = 'rgba(201,168,76,0.2)';
+      } else {
+        link.disabled = true;
+        document.body.style.fontFamily = '';
+        document.getElementById('btn-dyslexic').style.background = 'transparent';
+      }
+      localStorage.setItem('sc608_dyslexic', dyslexic ? '1' : '0');
+    }
+
+    window.toggleDyslexic = function() {
+      dyslexic = !dyslexic;
+      applyDyslexic();
+    };
+
+    applyDyslexic();
+  })();
+  </script>
+
 </body>
 </html>
