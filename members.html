@@ -727,9 +727,15 @@
     <div class="content-grid">
       <div class="c-card mm">
         <span class="c-icon mm">&#9710;</span>
-        <div class="c-title mm">Summons and Business</div>
-        <div class="c-desc">Full summons including all lodge business for Master Masons.</div>
+        <div class="c-title mm">Summons</div>
+        <div class="c-desc">Full lodge summons for Master Masons.</div>
         <ul class="doc-list mm" id="docs-mm-summons"><li class="doc-empty">No documents uploaded yet.</li></ul>
+      </div>
+      <div class="c-card mm">
+        <span class="c-icon mm">&#9960;</span>
+        <div class="c-title mm">Committee and Business</div>
+        <div class="c-desc">Committee meeting minutes, lodge business, and correspondence for Master Masons.</div>
+        <ul class="doc-list mm" id="docs-mm-business"><li class="doc-empty">No documents uploaded yet.</li></ul>
       </div>
       <div class="c-card mm">
         <span class="c-icon mm">&#9741;</span>
@@ -822,6 +828,7 @@ const STATIC_DOCUMENTS = [
   { title: 'Browse the Summons folder', section: 'ea-summons', link: 'https://drive.google.com/drive/folders/1us1XivW7XvEO4leFvLZipxIX6lgYdMso?usp=sharing' },
   { title: 'Browse the Summons folder', section: 'fc-summons', link: 'https://drive.google.com/drive/folders/1us1XivW7XvEO4leFvLZipxIX6lgYdMso?usp=sharing' },
   { title: 'Browse the Summons folder', section: 'mm-summons', link: 'https://drive.google.com/drive/folders/1us1XivW7XvEO4leFvLZipxIX6lgYdMso?usp=sharing' },
+  { title: 'Browse the Committee Meetings folder', section: 'mm-business', link: 'https://drive.google.com/drive/folders/1-LTeiM7Tou0T76swDopF60VHw8xQvltX?usp=sharing' },
 ];
 
 const CARD_MAP = {
@@ -837,6 +844,7 @@ const CARD_MAP = {
   'mm-centenary':  'docs-mm-centenary',
   'mm-governance': 'docs-mm-governance',
   'mm-scarf':      'docs-mm-scarf',
+  'mm-business':   'docs-mm-business',
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -892,7 +900,10 @@ async function decryptPayload(b64, password) {
 
 // ─── Documents — fetched from public Google Sheet CSV ────────────
 async function loadDocuments() {
-  let docs = [...STATIC_DOCUMENTS];
+  // Always start with static documents baked into the page
+  let docs = STATIC_DOCUMENTS.filter(d => d.title && d.section && d.link);
+
+  // Optionally fetch additional docs from Google Sheet
   if (DOCUMENTS_SHEET_URL !== 'YOUR_DOCUMENTS_SHEET_CSV_URL_HERE') {
     try {
       const res  = await fetch(DOCUMENTS_SHEET_URL);
@@ -908,7 +919,6 @@ async function loadDocuments() {
     }
   }
   loadedDocs = docs;
-  renderDocuments(docs);
 }
 
 function renderDocuments(docs) {
