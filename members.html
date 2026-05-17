@@ -834,6 +834,7 @@ const STATIC_DOCUMENTS = [
   { title: 'Browse the Summons folder', section: 'mm-summons', link: 'https://drive.google.com/drive/folders/1us1XivW7XvEO4leFvLZipxIX6lgYdMso?usp=sharing' },
   { title: 'Browse the Committee Meetings folder', section: 'mm-business', link: 'https://drive.google.com/drive/folders/1-LTeiM7Tou0T76swDopF60VHw8xQvltX?usp=sharing' },
   { title: 'Subs 2026', section: 'mm-minutes', link: 'https://docs.google.com/spreadsheets/d/1Qn8APS5ZCYj4dmETjZrpRTXUzAsWoRZiA0OKAOyt3Wk/edit?usp=sharing' },
+  { title: 'Browse the Governance Documents folder', section: 'mm-governance', link: 'https://drive.google.com/drive/folders/1bJnzumDRI2Nz5X0KCLKLRdI48jPcH89E?usp=sharing' },
 ];
 
 const CARD_MAP = {
@@ -1089,7 +1090,6 @@ function logout() {
 
   <script>
   (function() {
-    // Font size
     var sizes   = [85, 92, 100, 110, 120, 132];
     var sizeIdx = parseInt(localStorage.getItem('sc608_fontsize') || '2');
 
@@ -1105,7 +1105,6 @@ function logout() {
 
     applySize();
 
-    // High contrast
     var contrast = localStorage.getItem('sc608_contrast') === '1';
 
     function applyContrast() {
@@ -1126,7 +1125,6 @@ function logout() {
 
     applyContrast();
 
-    // Dyslexic font
     var dyslexic = localStorage.getItem('sc608_dyslexic') === '1';
 
     function applyDyslexic() {
